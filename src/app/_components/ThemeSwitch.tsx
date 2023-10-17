@@ -1,7 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useColorScheme } from "@mui/material/styles";
-import { styled, Switch } from "@mui/material";
+import { FormControlLabel, styled, Switch } from "@mui/material";
 
 const DarkModeSwitch = styled(Switch)(({ theme }) => ({
   padding: 8,
@@ -39,18 +39,27 @@ const DarkModeSwitch = styled(Switch)(({ theme }) => ({
 const ThemeSwitch = () => {
   const { mode, setMode } = useColorScheme();
   const [mounted, setMounted] = useState(false);
+  const defaultMode = useRef(mode);
 
   useEffect(() => {
     setMounted(true);
+    defaultMode.current = mode;
   }, []);
 
-  return (
-    <DarkModeSwitch
-      disabled={!mounted}
-      defaultChecked={mode == "dark"}
-      onChange={(e) => setMode(e.target.checked ? "dark" : "light")}
-    />
-  );
+  if (mounted) {
+    return (
+      <FormControlLabel
+        control={
+          <DarkModeSwitch
+            defaultChecked={defaultMode.current == "dark"}
+            onChange={(e) => setMode(e.target.checked ? "dark" : "light")}
+          />
+        }
+        label={"다크 모드"}
+        labelPlacement={"start"}
+      />
+    );
+  } else return null;
 };
 
 export default ThemeSwitch;

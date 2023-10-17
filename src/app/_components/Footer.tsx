@@ -1,4 +1,4 @@
-import { Box, FormControlLabel, Stack } from "@mui/material";
+import { Stack } from "@mui/material";
 
 import Copyright from "@/app/_components/Copyright";
 import ThemeSwitch from "@/app/_components/ThemeSwitch";
@@ -6,17 +6,13 @@ import ThemeSwitch from "@/app/_components/ThemeSwitch";
 export default function Footer() {
   return (
     <Stack
-      pt={3}
-      pb={1}
+      pt={4}
+      pb={10}
       justifyContent="center"
       alignItems="center"
       spacing={1}
     >
-      <FormControlLabel
-        control={<ThemeSwitch />}
-        label={"다크 모드"}
-        labelPlacement={"start"}
-      />
+      <ThemeSwitch />
       <Copyright />
     </Stack>
   );

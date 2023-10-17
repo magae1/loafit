@@ -12,7 +12,6 @@ export default function CharacterSearchInput() {
   const handleSubmit = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-
       router.push(`/character/${charName}`, { scroll: false });
     },
     [charName]
@@ -37,7 +36,7 @@ export default function CharacterSearchInput() {
         inputProps={{ "aria-label": "search character" }}
       />
       <IconButton
-        type="button"
+        type="submit"
         sx={{ borderRadius: 1 }}
         aria-label="search button"
       >

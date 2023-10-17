@@ -1,13 +1,12 @@
-import { Box, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 
-import { TArmoryEquipment, TArmoryProfile } from "@/app/_libs/types";
-import Image from "next/image";
+import { TCharacterData } from "@/app/_libs/types";
+import ProfilePaper from "@/app/character/[charName]/_components/ProfilePaper";
+import Fittings from "@/app/character/[charName]/_components/Fittings";
 
-const TYPES = ["귀걸이", "목걸이", "반지"];
-
-async function getEquipments(characterName: string) {
+async function getCharData(characterName: string) {
   const res = await fetch(
-    `${process.env.LOA_URL}/armories/characters/${characterName}/profiles`,
+    `${process.env.LOA_URL}/armories/characters/${characterName}`,
     {
       headers: {
         Authorization: `Bearer ${process.env.LOA_JWT}`,
@@ -16,9 +15,7 @@ async function getEquipments(characterName: string) {
   );
 
   if (!res.ok) throw new Error("⚠️데이터를 불러올 수 없습니다.⚠️");
-
-  const data: TArmoryProfile = await res.json();
-  return data;
+  return res.json();
 }
 
 export default async function Page({
@@ -27,16 +24,12 @@ export default async function Page({
   params: { charName: string };
 }) {
   const { charName } = params;
-  const charData: TArmoryProfile = await getEquipments(charName);
+  const charData: TCharacterData = await getCharData(charName);
 
   return (
-    <Box>
-      <Image
-        src={charData.CharacterImage}
-        alt={`${charData.CharacterName} 이미지`}
-        width={300}
-        height={400}
-      />
-    </Box>
+    <Stack my={2} spacing={1}>
+      <ProfilePaper profileData={charData.ArmoryProfile} />
+      <Fittings data={charData} />
+    </Stack>
   );
 }

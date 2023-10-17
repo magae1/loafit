@@ -6,11 +6,16 @@ export async function generateMetadata({
 }: {
   params: { charName: string };
 }) {
+  const charaName = decodeURI(params.charName);
   return {
-    title: `로아핏 유저 검색 - ${params.charName}`,
+    title: `로아핏 유저 검색 - ${charaName}`,
   };
 }
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return <Container>{children}</Container>;
+  return (
+    <Container maxWidth={"md"} disableGutters>
+      {children}
+    </Container>
+  );
 }

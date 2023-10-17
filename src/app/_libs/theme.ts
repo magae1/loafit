@@ -2,6 +2,21 @@ import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 import { purple } from "@mui/material/colors";
 
 export const theme = extendTheme({
+  components: {
+    MuiPaper: {
+      defaultProps: {
+        elevation: 0,
+        variant: "outlined",
+      },
+    },
+    MuiCard: {
+      defaultProps: {
+        variant: "elevation",
+        elevation: 1,
+      },
+    },
+  },
+
   colorSchemes: {
     light: {
       palette: {

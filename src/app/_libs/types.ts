@@ -112,14 +112,14 @@ export type TItemOption = {
   OptionNameTripod: string;
   Value: number;
   IsPenalty: boolean;
-  ClassName: string;
+  ClassName: string | null;
 };
 
 export type TItem = {
   Name: string;
   Grade: string;
   Tier: number;
-  Level: number;
+  Level: number | null;
   Icon: string;
   GradeQuality: number;
   Options: TItemOption[];
@@ -128,3 +128,10 @@ export type TItem = {
 export interface IAuctionItem extends TItem {
   AuctionInfo: TAuctionInfo;
 }
+
+export type TCharacterData = {
+  ArmoryProfile: TArmoryProfile;
+  ArmoryEquipment: TArmoryEquipment[];
+  ArmoryAvatars: TArmoryAvatar[];
+  ArmoryEngraving: TArmoryEngraving;
+};

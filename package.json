@@ -15,9 +15,11 @@
     "@mui/material": "^5.14.13",
     "@types/underscore": "^1.11.11",
     "next": "^13.5.5",
+    "node-html-parser": "^6.1.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "underscore": "^1.13.6"
+    "underscore": "^1.13.6",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/node": "^20.8.6",

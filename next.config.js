@@ -7,6 +7,7 @@ const nextConfig = {
         hostname: "img.lostark.co.kr",
         port: "",
       },
+      { protocol: "https", hostname: "cdn-lostark.game.onstove.com", port: "" },
     ],
   },
 };
