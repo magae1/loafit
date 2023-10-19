@@ -1,7 +1,17 @@
+import { Roboto } from "next/font/google";
 import { experimental_extendTheme as extendTheme } from "@mui/material/styles";
 import { purple } from "@mui/material/colors";
 
+const roboto = Roboto({
+  weight: ["300", "400", "500", "700"],
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const theme = extendTheme({
+  typography: {
+    fontFamily: roboto.style.fontFamily,
+  },
   components: {
     MuiPaper: {
       defaultProps: {
@@ -16,7 +26,6 @@ export const theme = extendTheme({
       },
     },
   },
-
   colorSchemes: {
     light: {
       palette: {

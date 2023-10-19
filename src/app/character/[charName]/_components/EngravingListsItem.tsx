@@ -1,18 +1,19 @@
-import { Box, Rating, Typography } from "@mui/material";
+import { ListItem, Rating, Typography } from "@mui/material";
 import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 
 interface Props {
   name: string;
   value: number;
+  isPenalty: boolean;
 }
 
-export default function EngravingRating(props: Props) {
-  const { name, value } = props;
+export default function EngravingListsItem(props: Props) {
+  const { name, value, isPenalty } = props;
 
   const level = Math.round(value / 5);
 
   return (
-    <Box>
+    <ListItem disablePadding>
       <Typography component={"legend"}>
         {name}-{level}
       </Typography>
@@ -23,6 +24,6 @@ export default function EngravingRating(props: Props) {
         icon={<RadioButtonChecked fontSize={"inherit"} />}
         emptyIcon={<RadioButtonUnchecked fontSize={"inherit"} />}
       />
-    </Box>
+    </ListItem>
   );
 }

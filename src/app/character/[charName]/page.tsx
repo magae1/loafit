@@ -1,8 +1,18 @@
-import { Stack } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 import { TCharacterData } from "@/app/_libs/types";
-import ProfilePaper from "@/app/character/[charName]/_components/ProfilePaper";
-import Fittings from "@/app/character/[charName]/_components/Fittings";
+import FittingTabs from "@/app/character/[charName]/_components/FittingTabs";
+
+interface Props {
+  params: { charName: string };
+}
+
+export async function generateMetadata({ params }: { charName: string }) {
+  const charaName = decodeURI(params.charName);
+  return {
+    title: `로아핏 유저 검색 - ${charaName}`,
+  };
+}
 
 async function getCharData(characterName: string) {
   const res = await fetch(
@@ -18,18 +28,20 @@ async function getCharData(characterName: string) {
   return res.json();
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { charName: string };
-}) {
-  const { charName } = params;
+export default async function Page(props: Props) {
+  const { charName } = props.params;
+
   const charData: TCharacterData = await getCharData(charName);
 
   return (
     <Stack my={2} spacing={1}>
-      <ProfilePaper profileData={charData.ArmoryProfile} />
-      <Fittings data={charData} />
+      <Box>
+        <Typography>{charData.ArmoryProfile.CharacterClassName}</Typography>
+        <Typography>{charData.ArmoryProfile.CharacterName}</Typography>
+      </Box>
+      <Box>
+        <FittingTabs data={charData} />
+      </Box>
     </Stack>
   );
 }

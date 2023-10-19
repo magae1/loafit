@@ -5,7 +5,7 @@ import { Box, Tab, Tabs, Container } from "@mui/material";
 import { TCharacterData } from "@/app/_libs/types";
 import EngravingFittings from "@/app/character/[charName]/_components/EngravingFittings";
 import _ from "underscore";
-import { equipmentTooltipParser } from "@/app/_libs/transformers";
+import { equipmentParser } from "@/app/_libs/transformers";
 
 const JEWELRIES = ["목걸이", "귀걸이", "반지", "팔찌"];
 
@@ -44,7 +44,7 @@ export default function Fittings(props: Props) {
   const jewelries = useMemo(() => {
     return _.chain(data.ArmoryEquipment)
       .filter((v) => _.contains(JEWELRIES, v.Type))
-      .map((v) => equipmentTooltipParser(v));
+      .map((v) => equipmentParser(v));
   }, [data]);
 
   return (
@@ -54,7 +54,7 @@ export default function Fittings(props: Props) {
           value={value}
           onChange={handleChange}
           variant={"fullWidth"}
-          aria-label={"nav tab"}
+          aria-label={"fitting tabs"}
         >
           <Tab label={"각인 핏"} />
           <Tab label={"보석 핏"} />
@@ -63,7 +63,7 @@ export default function Fittings(props: Props) {
       <FittingTabPanel index={0} value={value}>
         <EngravingFittings
           engravings={data.ArmoryEngraving}
-          stats={data.ArmoryProfile.Stats}
+          stats={data.ArmoryProfile.Stats.slice(0, 6)}
           jewelries={jewelries.value()}
         />
       </FittingTabPanel>

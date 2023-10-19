@@ -1,3 +1,15 @@
+export enum ITEM_OPTION_TYPES {
+  SKILL = "SKILL",
+  STAT = "STAT",
+  ABILITY_ENGRAVE = "ABILITY_ENGRAVE",
+  BRACELET_SPECIAL_EFFECTS = "BRACELET_SPECIAL_EFFECTS",
+  GEM_SKILL_COOLDOWN_REDUCTION = "GEM_SKILL_COOLDOWN_REDUCTION",
+  GEM_SKILL_COOLDOWN_REDUCTION_IDENTITY = "GEM_SKILL_COOLDOWN_REDUCTION_IDENTITY",
+  GEM_SKILL_DAMAGE = "GEM_SKILL_DAMAGE",
+  GEM_SKILL_DAMAGE_IDENTITY = "GEM_SKILL_DAMAGE_IDENTITY",
+  BRACELET_RANDOM_SLOT = "BRACELET_RANDOM_SLOT",
+}
+
 export type TStat = {
   Type: string;
   Value: string;
@@ -107,7 +119,7 @@ export type TAuctionInfo = {
 };
 
 export type TItemOption = {
-  Type: string;
+  Type: ITEM_OPTION_TYPES | null;
   OptionName: string;
   OptionNameTripod: string;
   Value: number;
@@ -134,4 +146,9 @@ export type TCharacterData = {
   ArmoryEquipment: TArmoryEquipment[];
   ArmoryAvatars: TArmoryAvatar[];
   ArmoryEngraving: TArmoryEngraving;
+};
+
+export type TJewelry = {
+  type: WEARING_JEWELRY_TYPES;
+  item: TItem | null;
 };

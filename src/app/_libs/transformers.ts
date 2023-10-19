@@ -1,7 +1,12 @@
 import _ from "underscore";
 import { parse } from "node-html-parser";
 
-import { TArmoryEquipment, TItem, TItemOption } from "@/app/_libs/types";
+import {
+  TArmoryEquipment,
+  TItem,
+  TItemOption,
+  ITEM_OPTION_TYPES,
+} from "@/app/_libs/types";
 
 type TItemPartBox = {
   Element_000: string;
@@ -17,22 +22,38 @@ type TItemTitle = {
 };
 
 const itemPartBoxParser = (v: TItemPartBox): TItemOption[] => {
-  // const element = parse(v.Element_000).firstChild;
-  // const type = element.text;
-  return _.chain(v.Element_001.split("<BR>"))
-    .map((v) => {
-      const [name, value] = v.split(" ");
-      return {
-        Type: "STAT",
-        OptionName: name,
-        OptionNameTripod: "",
-        Value: parseInt(value),
-        IsPenalty: false,
-        ClassName: null,
-      };
-    })
-    .compact()
-    .value();
+  const element = parse(v.Element_000).firstChild;
+  const type = element.text;
+  if (type === "추가 효과") {
+    return _.chain(v.Element_001.split("<BR>"))
+      .map((v) => {
+        const [name, value] = v.split(" ");
+        return {
+          Type: ITEM_OPTION_TYPES.STAT,
+          OptionName: name,
+          OptionNameTripod: "",
+          Value: parseInt(value),
+          IsPenalty: false,
+          ClassName: null,
+        };
+      })
+      .value();
+  } else if (type === "팔찌 효과") {
+    return _.chain(parse(v.Element_001).text.match(/[가-힣]* \+[0-9]+/g))
+      .map((v) => {
+        const [name, value] = v.split(" ");
+        return {
+          Type: ITEM_OPTION_TYPES.STAT,
+          OptionName: name,
+          OptionNameTripod: "",
+          Value: parseInt(value),
+          IsPenalty: false,
+          ClassName: null,
+        };
+      })
+      .value();
+  }
+  return [];
 };
 
 const itemTitleParser = (v: TItemTitle): number[] => {
@@ -42,19 +63,11 @@ const itemTitleParser = (v: TItemTitle): number[] => {
   return [tier ? parseInt(tier) : -1, gradeQuality];
 };
 
-export const equipmentTooltipParser = (equipment: TArmoryEquipment): TItem => {
+export const equipmentParser = (equipment: TArmoryEquipment): TItem => {
   const tooltipObj = JSON.parse(equipment.Tooltip);
-
-  console.log(tooltipObj);
   const options = _.chain(tooltipObj)
     .values()
-    .filter((v) => {
-      if (v.type === "ItemPartBox") {
-        if (parse(v.value.Element_000).firstChild.text === "추가 효과")
-          return true;
-      }
-      return false;
-    })
+    .filter((v) => v.type === "ItemPartBox")
     .map((v) => itemPartBoxParser(v.value))
     .flatten()
     .compact();
