@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 
-import { theme } from "@/app/_libs/theme";
+import { theme } from "@/libs/theme";
 
 const ThemeRegistry = (props: { children: ReactNode }) => {
   const { children } = props;

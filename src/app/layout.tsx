@@ -1,9 +1,9 @@
 import { ReactNode } from "react";
 import { Inter } from "next/font/google";
 
-import ThemeRegistry from "@/app/_components/ThemeRegistry";
-import Header from "@/app/_components/Header";
-import Footer from "@/app/_components/Footer";
+import ThemeRegistry from "@/components/ThemeRegistry";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const inter = Inter({ subsets: ["latin"] });
 

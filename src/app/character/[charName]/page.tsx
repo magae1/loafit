@@ -1,13 +1,13 @@
 import { Box, Stack, Typography } from "@mui/material";
 
-import { TCharacterData } from "@/app/_libs/types";
+import { TCharacterData } from "@/libs/types";
 import FittingTabs from "@/app/character/[charName]/_components/FittingTabs";
 
 interface Props {
   params: { charName: string };
 }
 
-export async function generateMetadata({ params }: { charName: string }) {
+export async function generateMetadata({ params }: Props) {
   const charaName = decodeURI(params.charName);
   return {
     title: `로아핏 유저 검색 - ${charaName}`,

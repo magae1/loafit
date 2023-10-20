@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { Delete, Folder } from "@mui/icons-material";
 
-import { TJewelry } from "@/app/_libs/types";
+import { TJewelry } from "@/libs/types";
 
 interface Props {
   jewelryData: TJewelry;

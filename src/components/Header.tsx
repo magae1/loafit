@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { AppBar, Grid, Typography, Container } from "@mui/material";
 
-import CharacterSearchInput from "@/app/_components/CharacterSearchInput";
+import CharacterSearchInput from "@/components/CharacterSearchInput";
 
 export default function Header() {
   return (

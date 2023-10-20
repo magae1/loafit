@@ -1,26 +1,11 @@
 "use client";
 import { useMemo, useState } from "react";
-import {
-  Grid,
-  Typography,
-  Stack,
-  Paper,
-  Box,
-  Divider,
-  List,
-} from "@mui/material";
+import { Grid, Typography, List } from "@mui/material";
 import _ from "underscore";
 
-import {
-  TArmoryEngraving,
-  TEngraving,
-  TItem,
-  TJewelry,
-  TStat,
-} from "@/app/_libs/types";
+import { TArmoryEngraving, TEngraving, TItem, TStat } from "@/libs/types";
 import StatsPaper from "@/app/character/[charName]/_components/StatsPaper";
-import Section from "@/app/_components/Section";
-import JewelryListItem from "@/app/character/[charName]/_components/JewelryListItem";
+import Section from "@/components/Section";
 
 type TJewelries = {
   Bracelet: TItem | null;

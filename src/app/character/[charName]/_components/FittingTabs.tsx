@@ -1,11 +1,11 @@
 "use client";
 import { SyntheticEvent, useMemo, useState, ReactNode } from "react";
 import { Box, Tab, Tabs, Container } from "@mui/material";
-
-import { TCharacterData } from "@/app/_libs/types";
-import EngravingFittings from "@/app/character/[charName]/_components/EngravingFittings";
 import _ from "underscore";
-import { equipmentParser } from "@/app/_libs/transformers";
+
+import { TCharacterData } from "@/libs/types";
+import { equipmentParser } from "@/libs/transformers";
+import EngravingFittings from "@/app/character/[charName]/_components/EngravingFittings";
 
 const JEWELRIES = ["목걸이", "귀걸이", "반지", "팔찌"];
 

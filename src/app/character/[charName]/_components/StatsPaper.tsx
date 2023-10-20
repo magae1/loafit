@@ -1,7 +1,7 @@
 import { Chip, Stack } from "@mui/material";
 import _ from "underscore";
 
-import { TStat } from "@/app/_libs/types";
+import { TStat } from "@/libs/types";
 
 interface Props {
   stats: TStat[];

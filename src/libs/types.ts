@@ -149,6 +149,6 @@ export type TCharacterData = {
 };
 
 export type TJewelry = {
-  type: WEARING_JEWELRY_TYPES;
+  type: string;
   item: TItem | null;
 };

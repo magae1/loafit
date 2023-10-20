@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 
-import Copyright from "@/app/_components/Copyright";
-import ThemeSwitch from "@/app/_components/ThemeSwitch";
+import Copyright from "@/components/Copyright";
+import ThemeSwitch from "@/components/ThemeSwitch";
 
 export default function Footer() {
   return (
