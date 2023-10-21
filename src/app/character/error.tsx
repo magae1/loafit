@@ -1,6 +1,6 @@
 "use client";
-
 import { useEffect } from "react";
+import { Box, Typography } from "@mui/material";
 
 export default function Error({
   error,
@@ -15,16 +15,9 @@ export default function Error({
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
-      <button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </button>
-    </div>
+    <Box sx={{ width: "100%" }} pt={6} px={"10vw"}>
+      <Typography variant={"h4"}>404 Not found</Typography>
+      <Typography variant={"caption"}>{error.message}</Typography>
+    </Box>
   );
 }

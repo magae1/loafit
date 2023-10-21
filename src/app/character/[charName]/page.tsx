@@ -21,17 +21,20 @@ async function getCharData(characterName: string) {
       headers: {
         Authorization: `Bearer ${process.env.LOA_JWT}`,
       },
-    }
+    },
   );
 
   if (!res.ok) throw new Error("⚠️데이터를 불러올 수 없습니다.⚠️");
+
   return res.json();
 }
 
 export default async function Page(props: Props) {
   const { charName } = props.params;
 
-  const charData: TCharacterData = await getCharData(charName);
+  const charData: TCharacterData | null = await getCharData(charName);
+
+  if (!charData) throw new Error("유저를 찾을 수 없습니다.");
 
   return (
     <Stack my={2} spacing={1}>

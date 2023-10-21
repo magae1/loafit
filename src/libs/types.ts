@@ -10,6 +10,7 @@ export enum ITEM_OPTION_TYPES {
   BRACELET_RANDOM_SLOT = "BRACELET_RANDOM_SLOT",
 }
 
+
 export type TStat = {
   Type: string;
   Value: string;

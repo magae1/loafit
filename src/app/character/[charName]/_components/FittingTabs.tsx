@@ -13,13 +13,11 @@ interface Props {
   data: TCharacterData;
 }
 
-interface TabPanelProps {
+function FittingTabPanel(props: {
   children?: ReactNode;
   index: number;
   value: number;
-}
-
-function FittingTabPanel(props: TabPanelProps) {
+}) {
   const { children, index, value } = props;
   return (
     <div

@@ -7,15 +7,6 @@ import { TArmoryEngraving, TEngraving, TItem, TStat } from "@/libs/types";
 import StatsPaper from "@/app/character/[charName]/_components/StatsPaper";
 import Section from "@/components/Section";
 
-type TJewelries = {
-  Bracelet: TItem | null;
-  Earring1: TItem | null;
-  Earring2: TItem | null;
-  Ring1: TItem | null;
-  Ring2: TItem | null;
-  Necklace: TItem | null;
-};
-
 interface Props {
   engravings: TArmoryEngraving;
   stats: TStat[];
@@ -31,13 +22,12 @@ export default function EngravingFittings(props: Props) {
 
   const [currentStats, setCurrentStats] = useState<TStat[]>(stats);
   const [currentEngravings, setCurrentEngravings] = useState<TEngraving[]>(
-    engravings.Engravings
+    engravings.Engravings,
   );
-  const [currentJewelries, setCurrentJewelries] = useState<TJewelries>();
 
   const engravingRatings = useMemo(() => {
     return null;
-  }, [currentEngravings, currentJewelries]);
+  }, [currentEngravings]);
 
   return (
     <Grid container>
@@ -61,11 +51,7 @@ export default function EngravingFittings(props: Props) {
       </Grid>
       <Grid item xs={12}>
         <Section name={"장신구"}>
-          <List>
-            {/*{currentJewelries.map((v) => (*/}
-            {/*  <JewelryListItem jewelryData={v} key={_.uniqueId("jewelry_")} />*/}
-            {/*))}*/}
-          </List>
+          <List></List>
         </Section>
       </Grid>
     </Grid>
