@@ -15,6 +15,7 @@
     "@mui/material": "^5.14.13",
     "@reduxjs/toolkit": "^1.9.7",
     "@types/underscore": "^1.11.11",
+    "dayjs": "^1.11.10",
     "next": "^13.5.5",
     "node-html-parser": "^6.1.10",
     "prettier": "^3.0.3",

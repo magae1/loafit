@@ -1,22 +1,29 @@
 import Link from "next/link";
-import { AppBar, Grid, Typography, Container } from "@mui/material";
+import {
+  AppBar,
+  Link as MuiLink,
+  Container,
+  Typography,
+  Toolbar,
+  Grid,
+  Box,
+} from "@mui/material";
 
-import CharacterSearchInput from "@/components/CharacterSearchInput";
+import SearchBar from "@/components/SearchBar";
 
 export default function Header() {
   return (
-    <AppBar position={"static"} sx={{ borderWidth: "0 0 1px 0" }}>
-      <Container maxWidth={"md"} disableGutters>
-        <Grid container py={1} px={0.5} spacing={1}>
-          <Grid item xs={"auto"}>
-            <Link href={"/"}>
-              <Typography>로아핏</Typography>
-            </Link>
-          </Grid>
-          <Grid item xs sx={{ display: "flex", justifyContent: "flex-end" }}>
-            <CharacterSearchInput />
-          </Grid>
-        </Grid>
+    <AppBar position={"static"}>
+      <Container maxWidth={"lg"} disableGutters>
+        <Toolbar>
+          <MuiLink component={Link} href={"/"} sx={{ textDecoration: "none" }}>
+            <Typography color={"primary.contrastText"} variant={"h6"}>
+              LOA-NOW
+            </Typography>
+          </MuiLink>
+          <Box sx={{ flexGrow: 1 }}></Box>
+          <SearchBar />
+        </Toolbar>
       </Container>
     </AppBar>
   );

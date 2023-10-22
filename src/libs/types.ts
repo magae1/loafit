@@ -10,7 +10,6 @@ export enum ITEM_OPTION_TYPES {
   BRACELET_RANDOM_SLOT = "BRACELET_RANDOM_SLOT",
 }
 
-
 export type TStat = {
   Type: string;
   Value: string;
@@ -152,4 +151,43 @@ export type TCharacterData = {
 export type TJewelry = {
   type: string;
   item: TItem | null;
+};
+
+export type TMarketItem = {
+  Id: number;
+  Name: string;
+  Grade: string;
+  Icon: string;
+  BundleCount: number;
+  TradeRemainCount: number | null;
+  YDayAvgPrice: number;
+  RecentPrice: number;
+  CurrentMinPrice: number;
+};
+
+export type TMarketList = {
+  PageNo: number;
+  PageSize: number;
+  TotalCount: number;
+  Items: TMarketItem[];
+};
+
+export type TMarketStatsInfo = {
+  Date: Date;
+  AvgPrice: number;
+  TradeCount: number;
+};
+
+export type TMarketItemStats = {
+  Name: string;
+  TradeRemainCount: number | null;
+  BundleCount: number;
+  Stats: TMarketStatsInfo[];
+  Tooltip: string;
+};
+
+export type searchInputType = {
+  searchOn: number;
+  inputValue: string;
+  searchAt: number;
 };

@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Box, Stack, Typography } from "@mui/material";
 
 import { TCharacterData } from "@/libs/types";
@@ -10,7 +11,7 @@ interface Props {
 export async function generateMetadata({ params }: Props) {
   const charaName = decodeURI(params.charName);
   return {
-    title: `로아핏 유저 검색 - ${charaName}`,
+    title: `${charaName} - 로아핏`,
   };
 }
 
@@ -38,7 +39,16 @@ export default async function Page(props: Props) {
 
   return (
     <Stack my={2} spacing={1}>
-      <Box>
+      <Box sx={{ height: 500 }}>
+        <Box sx={{ position: "relative", width: 300, height: 300 }}>
+          <Image
+            src={charData.ArmoryProfile.CharacterImage ?? ""}
+            alt={`${charData.ArmoryProfile.CharacterName} 님의 이미지`}
+            width={500}
+            height={500}
+            style={{ position: "absolute" }}
+          />
+        </Box>
         <Typography>{charData.ArmoryProfile.CharacterClassName}</Typography>
         <Typography>{charData.ArmoryProfile.CharacterName}</Typography>
       </Box>

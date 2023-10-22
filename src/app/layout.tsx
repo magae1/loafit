@@ -1,24 +1,30 @@
 import { ReactNode } from "react";
-import { Inter } from "next/font/google";
+import dayjs from "dayjs";
+import "dayjs/locale/ko";
+dayjs.locale("ko");
 
 import ThemeRegistry from "@/components/ThemeRegistry";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReduxProvider from "@/redux/ReduxProvider";
+import { Metadata } from "next";
 
-const inter = Inter({ subsets: ["latin"] });
+export const metadata: Metadata = {
+  title: "로아핏",
+  description: "로스트아크 유저에게 딱 맞는 사이트, 로아핏",
+};
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <body>
-       <ReduxProvider>
-         <ThemeRegistry>
-           <Header />
-           {children}
-           <Footer />
-         </ThemeRegistry>
-       </ReduxProvider>
+        <ReduxProvider>
+          <ThemeRegistry>
+            <Header />
+            {children}
+            <Footer />
+          </ThemeRegistry>
+        </ReduxProvider>
       </body>
     </html>
   );

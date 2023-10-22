@@ -18,7 +18,7 @@ const calcWearingJewelries = (items: TItem[]) => {};
 export default function EngravingFittings(props: Props) {
   const { engravings, stats, jewelries } = props;
 
-  console.log(_.groupBy(jewelries, (v) => v.Name.split(" ").pop() ?? ""));
+  // console.log(_.groupBy(jewelries, (v) => v.Name.split(" ").pop() ?? ""));
 
   const [currentStats, setCurrentStats] = useState<TStat[]>(stats);
   const [currentEngravings, setCurrentEngravings] = useState<TEngraving[]>(

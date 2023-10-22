@@ -65,7 +65,6 @@ const itemTitleParser = (v: TItemTitle): number[] => {
 
 export const equipmentParser = (equipment: TArmoryEquipment): TItem => {
   const tooltipObj = JSON.parse(equipment.Tooltip);
-  console.log(tooltipObj);
   const options = _.chain(tooltipObj)
     .values()
     .filter((v) => v.type === "ItemPartBox")
