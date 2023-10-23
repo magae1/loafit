@@ -1,8 +1,11 @@
-import Image from "next/image";
-import { Box, Stack, Typography } from "@mui/material";
+import { Grid, Stack, Typography, Divider } from "@mui/material";
+import _ from "underscore";
 
-import { TCharacterData } from "@/libs/types";
+import { TCharacterData, TStat } from "@/libs/types";
 import FittingTabs from "@/app/character/[charName]/_components/FittingTabs";
+import BoardItemWrapper from "@/app/character/[charName]/_components/profile/BoardItemWrapper";
+import EngravingEffectsBoard from "@/app/character/[charName]/_components/profile/EngravingEffectsBoard";
+import StatsBoard from "@/app/character/[charName]/_components/profile/StatsBoard";
 
 interface Props {
   params: { charName: string };
@@ -38,23 +41,62 @@ export default async function Page(props: Props) {
   if (!charData) throw new Error("유저를 찾을 수 없습니다.");
 
   return (
-    <Stack my={2} spacing={1}>
-      <Box sx={{ height: 500 }}>
-        <Box sx={{ position: "relative", width: 300, height: 300 }}>
-          <Image
-            src={charData.ArmoryProfile.CharacterImage ?? ""}
-            alt={`${charData.ArmoryProfile.CharacterName} 님의 이미지`}
-            width={500}
-            height={500}
-            style={{ position: "absolute" }}
-          />
-        </Box>
-        <Typography>{charData.ArmoryProfile.CharacterClassName}</Typography>
-        <Typography>{charData.ArmoryProfile.CharacterName}</Typography>
-      </Box>
-      <Box>
-        <FittingTabs data={charData} />
-      </Box>
-    </Stack>
+    <div style={{ flexGrow: 1 }}>
+      <div
+        style={{
+          width: "inherit",
+          backgroundImage: `url(${
+            charData.ArmoryProfile.CharacterImage ?? ""
+          })`,
+          backgroundRepeat: "no-repeat",
+          backgroundPositionX: "center",
+          backgroundPositionY: "66px",
+          backgroundColor: "#15181d",
+          backgroundAttachment: "fixed",
+          zIndex: -100,
+        }}
+      >
+        <Grid container>
+          <Grid item xs={5}>
+            <Stack
+              bgcolor={"background.paper"}
+              sx={{ px: 1, py: 2, m: 1, opacity: 0.8 }}
+            >
+              <Typography component={"div"} variant={"subtitle2"}>
+                {charData.ArmoryProfile.Title}
+              </Typography>
+              <Typography component={"div"} variant={"h4"}>
+                {charData.ArmoryProfile.CharacterName}
+              </Typography>
+              <div style={{ display: "flex", justifyContent: "end" }}>
+                <Typography variant={"button"} gutterBottom>
+                  {charData.ArmoryProfile.CharacterClassName}
+                </Typography>
+              </div>
+              <Divider>
+                <Typography variant={"button"}>캐릭터/아이템 레벨</Typography>
+              </Divider>
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                <Typography
+                  variant={"h6"}
+                  gutterBottom
+                >{`Lv. ${charData.ArmoryProfile.CharacterLevel}`}</Typography>
+                <Typography
+                  variant={"h6"}
+                  gutterBottom
+                >{`Lv. ${charData.ArmoryProfile.ItemAvgLevel}`}</Typography>
+              </div>
+              <BoardItemWrapper>
+                <StatsBoard data={charData.ArmoryProfile.Stats} />
+                <EngravingEffectsBoard
+                  data={charData.ArmoryEngraving.Effects}
+                />
+              </BoardItemWrapper>
+            </Stack>
+          </Grid>
+        </Grid>
+      </div>
+      <FittingTabs data={charData} />
+    </div>
   );
 }

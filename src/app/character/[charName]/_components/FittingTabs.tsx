@@ -1,6 +1,6 @@
 "use client";
 import { SyntheticEvent, useMemo, useState, ReactNode } from "react";
-import { Box, Tab, Tabs, Container } from "@mui/material";
+import { Tab, Tabs, Container, useTheme, Typography } from "@mui/material";
 import _ from "underscore";
 
 import { TCharacterData } from "@/libs/types";
@@ -33,6 +33,7 @@ function FittingTabPanel(props: {
 
 export default function Fittings(props: Props) {
   const { data } = props;
+  const theme = useTheme();
   const [value, setValue] = useState(0);
 
   const handleChange = (e: SyntheticEvent, newValue: number) => {
@@ -46,18 +47,16 @@ export default function Fittings(props: Props) {
   }, [data]);
 
   return (
-    <Box>
-      <Box>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          variant={"fullWidth"}
-          aria-label={"fitting tabs"}
-        >
-          <Tab label={"각인 핏"} />
-          <Tab label={"보석 핏"} />
-        </Tabs>
-      </Box>
+    <div>
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        variant={"fullWidth"}
+        aria-label={"fitting tabs"}
+      >
+        <Tab label={"각인 핏"} />
+        <Tab label={"보석 핏"} />
+      </Tabs>
       <FittingTabPanel index={0} value={value}>
         <EngravingFittings
           engravings={data.ArmoryEngraving}
@@ -66,8 +65,10 @@ export default function Fittings(props: Props) {
         />
       </FittingTabPanel>
       <FittingTabPanel index={1} value={value}>
-        보석 맞추기
+        <Typography textAlign={"center"} py={{ xs: 2, sm: 4, md: 6 }}>
+          공사 중
+        </Typography>
       </FittingTabPanel>
-    </Box>
+    </div>
   );
 }

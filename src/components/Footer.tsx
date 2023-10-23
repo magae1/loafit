@@ -11,6 +11,7 @@ export default function Footer() {
       justifyContent="center"
       alignItems="center"
       spacing={1}
+      bgcolor={"background.default"}
     >
       <ThemeSwitch />
       <Copyright />

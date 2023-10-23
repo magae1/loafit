@@ -23,13 +23,5 @@ export default function Page() {
       .value();
   }, [recentSearchList]);
  */
-  return (
-    <Box width={"100%"}>
-      <Box width={"100%"} px={{ xs: 2, sm: "15%", lg: 30 }} pt={4} pb={2}>
-        <Typography textAlign={"center"} my={1}>
-          캐릭터 핏
-        </Typography>
-      </Box>
-    </Box>
-  );
+  return <Box width={"100%"}>123</Box>;
 }
