@@ -1,26 +1,20 @@
 import { ReactNode } from "react";
-import { Stack, Container, Divider, Grid } from "@mui/material";
+import { Stack, Container, Divider } from "@mui/material";
 
 interface Props {
   children: ReactNode;
   engraving: ReactNode;
   oreha: ReactNode;
+  notice: ReactNode;
 }
 
 export default function Layout(props: Props) {
-  const { children, engraving, oreha } = props;
+  const { children, engraving, oreha, notice } = props;
   return (
     <Container maxWidth={"lg"}>
-      <Stack spacing={1} divider={<Divider />}>
+      <Stack divider={<Divider />} spacing={2}>
         {children}
-        <Grid container>
-          <Grid item xs>
-            {engraving}
-          </Grid>
-          <Grid item xs>
-            {oreha}
-          </Grid>
-        </Grid>
+        {notice}
       </Stack>
     </Container>
   );

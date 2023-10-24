@@ -1,46 +1,55 @@
 "use client";
-import { useMemo, useState } from "react";
-import { Grid, Typography, List } from "@mui/material";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Grid, List } from "@mui/material";
 import _ from "underscore";
 
-import { TArmoryEngraving, TEngraving, TItem, TStat } from "@/libs/types";
-import StatsPaper from "@/app/character/[charName]/_components/StatsPaper";
+import { TArmoryEquipment, TEngraving, JEWELRIES } from "@/libs/types";
 import Section from "@/components/Section";
+import { equipmentParser } from "@/libs/transformers";
+import StatsBoard from "@/app/character/[charName]/_components/engravingfit/StatsBoard";
+import JewelryListItem from "@/app/character/[charName]/_components/engravingfit/JewelryListItem";
+import {
+  initializeJewelries,
+  removeAll,
+} from "@/redux/features/jewelriesSlice";
 
 interface Props {
-  engravings: TArmoryEngraving;
-  stats: TStat[];
-  jewelries: TItem[];
+  equipments: TArmoryEquipment[];
+  engravings: TEngraving[];
 }
 
-const calcWearingJewelries = (items: TItem[]) => {};
-
 export default function EngravingFittings(props: Props) {
-  const { engravings, stats, jewelries } = props;
+  const { engravings, equipments } = props;
+  const dispatch = useDispatch();
 
-  // console.log(_.groupBy(jewelries, (v) => v.Name.split(" ").pop() ?? ""));
+  const jewelries = _.chain(equipments)
+    .filter((item) => _.contains(JEWELRIES, item.Type))
+    .map((item) => equipmentParser(item));
 
-  const [currentStats, setCurrentStats] = useState<TStat[]>(stats);
-  const [currentEngravings, setCurrentEngravings] = useState<TEngraving[]>(
-    engravings.Engravings,
-  );
-
-  const engravingRatings = useMemo(() => {
-    return null;
-  }, [currentEngravings]);
+  useEffect(() => {
+    dispatch(initializeJewelries(jewelries.value()));
+    return () => {
+      dispatch(removeAll());
+    };
+  }, []);
 
   return (
     <Grid container>
       <Grid item xs={12} sm>
-        <Section name={"특성"}>
-          <StatsPaper stats={currentStats} />
+        <Section name={"전투 특성"}>
+          <StatsBoard />
         </Section>
       </Grid>
       <Grid item xs={12} sm={"auto"}>
         <Section name={"각인 효과"}>
-          {engravings.Effects.map((value, index) => {
-            return <Typography key={index}>{value.Name}</Typography>;
-          })}
+          {/*{engravings.map((v) => (*/}
+          {/*  <EngravingListsItem*/}
+          {/*    name={v.Name}*/}
+          {/*    value={v.Slot}*/}
+          {/*    isPenalty={false}*/}
+          {/*  />*/}
+          {/*))}*/}
         </Section>
       </Grid>
       <Grid item xs={12}>
@@ -51,7 +60,11 @@ export default function EngravingFittings(props: Props) {
       </Grid>
       <Grid item xs={12}>
         <Section name={"장신구"}>
-          <List></List>
+          <List>
+            {jewelries
+              .map((item, k) => <JewelryListItem key={k} jewelryData={item} />)
+              .value()}
+          </List>
         </Section>
       </Grid>
     </Grid>

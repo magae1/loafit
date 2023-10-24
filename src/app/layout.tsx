@@ -1,7 +1,9 @@
 import { ReactNode } from "react";
 import dayjs from "dayjs";
+const relativeTime = require("dayjs/plugin/relativeTime");
 import "dayjs/locale/ko";
 dayjs.locale("ko");
+dayjs.extend(relativeTime);
 
 import ThemeRegistry from "@/components/ThemeRegistry";
 import Header from "@/components/Header";

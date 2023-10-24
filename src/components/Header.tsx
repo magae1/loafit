@@ -5,17 +5,14 @@ import {
   Container,
   Typography,
   Toolbar,
-  Grid,
   Box,
 } from "@mui/material";
-
-import SearchBar from "@/components/SearchBar";
 
 export default function Header() {
   return (
     <AppBar position={"static"}>
       <Container maxWidth={"lg"} disableGutters>
-        <Toolbar>
+        <Toolbar variant={"dense"}>
           <MuiLink component={Link} href={"/"} sx={{ textDecoration: "none" }}>
             <Typography
               color={"primary.contrastText"}
@@ -35,7 +32,6 @@ export default function Header() {
             </Typography>
           </MuiLink>
           <Box sx={{ flexGrow: 1 }}></Box>
-          <SearchBar />
         </Toolbar>
       </Container>
     </AppBar>

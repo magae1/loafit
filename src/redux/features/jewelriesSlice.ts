@@ -1,58 +1,40 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import _ from "underscore";
 
-import { TItem, IAuctionItem, TJewelry } from "@/libs/types";
+import { IAuctionItem, TJewelry, JEWELRIES } from "@/libs/types";
 
-type DefaultType = {
-  value: jewelriesType;
+type wearingType = {
+  jewelry: TJewelry[];
+  maxCount: number;
 };
 
-type jewelriesType = {
-  necklace: TJewelry;
-  earring1: TJewelry;
-  earring2: TJewelry;
-  ring1: TJewelry;
-  ring2: TJewelry;
-  bracelet: TJewelry;
-};
+const JEWELRY_DATA: wearingType[] = [
+  { jewelry: [], maxCount: 1 },
+  { jewelry: [], maxCount: 2 },
+  { jewelry: [], maxCount: 2 },
+  { jewelry: [], maxCount: 1 },
+];
 
-const defaultState: DefaultType = {
-  value: {
-    necklace: {
-      type: "목걸이",
-      item: null,
-    },
-    earring1: {
-      type: "귀걸이",
-      item: null,
-    },
-    earring2: {
-      type: "귀걸이",
-      item: null,
-    },
-    ring1: {
-      type: "반지",
-      item: null,
-    },
-    ring2: {
-      type: "반지",
-      item: null,
-    },
-    bracelet: {
-      type: "팔찌",
-      item: null,
-    },
-  },
+type jewelriesType = _.Dictionary<wearingType>;
+
+const defaultState = {
+  value: _.object(JEWELRIES, JEWELRY_DATA) as jewelriesType,
 };
 
 export const jewelries = createSlice({
   name: "jewelries",
-  initialState: () => {
-    // if (localStorage.getItem("jewelries/wearing")) {
-    //   return JSON.parse(localStorage.getItem("jewelries/wearing"));
-    // }
-    return defaultState;
+  initialState: defaultState,
+  reducers: {
+    initializeJewelries: (state, action: PayloadAction<TJewelry[]>) => {
+      _.chain(action.payload)
+        .groupBy((v) => v.codeName)
+        .each((val, key) => {
+          state.value[key].jewelry = val;
+        });
+    },
+    removeAll: () => defaultState,
   },
-  reducers: {},
 });
 
 export default jewelries.reducer;
+export const { initializeJewelries, removeAll } = jewelries.actions;

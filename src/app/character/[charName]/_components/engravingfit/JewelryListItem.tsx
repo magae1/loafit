@@ -15,20 +15,11 @@ interface Props {
   jewelryData: TJewelry;
 }
 
-enum WEARING_JEWELRY_TYPES {
-  Bracelet = "팔찌",
-  Earring1 = "귀걸이1",
-  Earring2 = "귀걸이2",
-  Ring1 = "반지1",
-  Ring2 = "반지2",
-  Necklace = "목걸이",
-}
-
 export default function JewelryListItem(props: Props) {
-  const { type, item } = props.jewelryData;
+  const { codeName, item } = props.jewelryData;
 
   const effects = item?.Options.map((v) => `${v.OptionName}: ${v.Value}`).join(
-    ", "
+    ", ",
   );
 
   return (
@@ -53,7 +44,7 @@ export default function JewelryListItem(props: Props) {
         disableTypography
         primary={
           <Typography noWrap={true}>
-            {item ? `[${item.Grade}] ${item.Name}` : type}
+            {item ? `[${item.Grade}] ${item.Name}` : codeName}
           </Typography>
         }
         secondary={effects}

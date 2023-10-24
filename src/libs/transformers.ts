@@ -3,9 +3,9 @@ import { parse } from "node-html-parser";
 
 import {
   TArmoryEquipment,
-  TItem,
   TItemOption,
   ITEM_OPTION_TYPES,
+  TJewelry,
 } from "@/libs/types";
 
 type TItemPartBox = {
@@ -20,6 +20,32 @@ type TItemTitle = {
   leftStr2: string;
   qualityValue: number;
 };
+
+type TIndentString = {
+  bPoint: number;
+  contentStr: string;
+  pointType: number;
+};
+
+const indentStringParser = (v: TIndentString[]): (TItemOption | null)[] =>
+  v.map((item, i) => {
+    const element = parse(item.contentStr);
+    const text = element.text.trim();
+
+    const name = text.match(/\[([가-힣| ])+]/i)?.[0];
+    const value = text.match(/\+[0-9]+/i)?.[0];
+
+    if (!name || !value) return null;
+
+    return {
+      Type: ITEM_OPTION_TYPES.ABILITY_ENGRAVE,
+      OptionName: name.slice(1, -1),
+      OptionNameTripod: "",
+      Value: parseInt(value),
+      IsPenalty: i === v.length - 1,
+      ClassName: null,
+    };
+  });
 
 const itemPartBoxParser = (v: TItemPartBox): TItemOption[] => {
   const element = parse(v.Element_000).firstChild;
@@ -63,28 +89,41 @@ const itemTitleParser = (v: TItemTitle): number[] => {
   return [tier ? parseInt(tier) : -1, gradeQuality];
 };
 
-export const equipmentParser = (equipment: TArmoryEquipment): TItem => {
+export const equipmentParser = (equipment: TArmoryEquipment): TJewelry => {
   const tooltipObj = JSON.parse(equipment.Tooltip);
-  const options = _.chain(tooltipObj)
-    .values()
-    .filter((v) => v.type === "ItemPartBox")
-    .map((v) => itemPartBoxParser(v.value))
-    .flatten()
-    .compact();
 
   const titleObjects = _.chain<TItemTitle>(tooltipObj)
     .values()
     .find((v) => v.type === "ItemTitle");
 
+  const options = _.chain(tooltipObj)
+    .values()
+    .groupBy((v) => v.type)
+    .map((i, key) => {
+      if (key === "ItemPartBox") {
+        return i.map((v) => itemPartBoxParser(v.value));
+      } else if (key === "IndentStringGroup") {
+        return i.map((v) =>
+          indentStringParser(_.values(v.value.Element_000.contentStr)),
+        );
+      }
+      return null;
+    })
+    .flatten()
+    .compact();
+
   const [tier, quality] = itemTitleParser(titleObjects.value().value);
 
   return {
-    Name: equipment.Name,
-    Grade: equipment.Grade,
-    Icon: equipment.Icon,
-    Tier: tier,
-    GradeQuality: quality,
-    Level: null,
-    Options: options.value(),
+    codeName: equipment.Type,
+    item: {
+      Name: equipment.Name,
+      Grade: equipment.Grade,
+      Icon: equipment.Icon,
+      Tier: tier,
+      GradeQuality: quality,
+      Level: null,
+      Options: options.value(),
+    },
   };
 };

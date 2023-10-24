@@ -1,27 +1,19 @@
-"use client";
-import { useEffect, useMemo, useState } from "react";
-import { Box, Typography } from "@mui/material";
-import _ from "underscore";
+import { Stack, Typography } from "@mui/material";
 
-import { useAppSelector } from "@/redux/store";
+import SearchBar from "@/app/(home)/_component/SearchBar";
+import RecentSearchList from "@/app/(home)/_component/RecentSearchList";
+import { ResponsivePaddingWrapper } from "@/components/styles";
 
 export default function Page() {
-  const [mounted, setMounted] = useState(false);
-  /*
-  const recentSearchList = useAppSelector(
-    (state) => state.characterSearch.value,
+  return (
+    <Stack pt={10}>
+      <Typography variant={"h5"} component={"h4"} align={"center"} gutterBottom>
+        캐릭터핏
+      </Typography>
+      <ResponsivePaddingWrapper>
+        <SearchBar width={"100%"} />
+        <RecentSearchList />
+      </ResponsivePaddingWrapper>
+    </Stack>
   );
-
-  const recentSearches = useMemo(() => {
-    return _.chain(recentSearchList)
-      .pairs()
-      .sortBy((v) => -v[1])
-      .map((v) => {
-        const [a, b] = v;
-        return <SearchChip key={_.uniqueId("search-chip")} label={a} />;
-      })
-      .value();
-  }, [recentSearchList]);
- */
-  return <Box width={"100%"}>123</Box>;
 }

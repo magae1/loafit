@@ -1,7 +1,6 @@
 import { Grid, Stack, Typography, Divider } from "@mui/material";
-import _ from "underscore";
 
-import { TCharacterData, TStat } from "@/libs/types";
+import { TCharacterData } from "@/libs/types";
 import FittingTabs from "@/app/character/[charName]/_components/FittingTabs";
 import BoardItemWrapper from "@/app/character/[charName]/_components/profile/BoardItemWrapper";
 import EngravingEffectsBoard from "@/app/character/[charName]/_components/profile/EngravingEffectsBoard";
