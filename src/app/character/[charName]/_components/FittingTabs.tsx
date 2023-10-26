@@ -1,9 +1,19 @@
 "use client";
-import { SyntheticEvent, useState, ReactNode } from "react";
+import { useParams } from "next/navigation";
+import { SyntheticEvent, useState, ReactNode, useEffect, useMemo } from "react";
 import { Tab, Tabs, Container, Typography } from "@mui/material";
+import _ from "underscore";
+import { useDispatch } from "react-redux";
 
-import { TCharacterData } from "@/libs/types";
+import { JEWELRY_TYPES, STONE, TCharacterData } from "@/libs/types";
 import EngravingFittings from "@/app/character/[charName]/_components/EngravingFittings";
+import { addSearchInput } from "@/redux/features/characterSearchSlice";
+import { equipmentParser, stoneParser } from "@/libs/transformers";
+import {
+  initializeJewelries,
+  removeAll,
+} from "@/redux/features/jewelriesSlice";
+import { initializeStone, removeStone } from "@/redux/features/stoneSlice";
 
 interface Props {
   data: TCharacterData;
@@ -28,12 +38,39 @@ function FittingTabPanel(props: {
 }
 
 export default function Fittings(props: Props) {
-  const { data } = props;
+  const { ArmoryEquipment } = props.data;
+  const params = useParams();
+  const dispatch = useDispatch();
   const [value, setValue] = useState(0);
 
   const handleChange = (_: SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const jewelries = useMemo(() => {
+    return _.chain(ArmoryEquipment)
+      .filter((item) => _.contains(JEWELRY_TYPES, item.Type))
+      .map((item) => equipmentParser(item))
+      .value();
+  }, []);
+
+  const stone = useMemo(() => {
+    const stoneData = _.find(ArmoryEquipment, (v) => v.Type === STONE);
+    return stoneData ? stoneParser(stoneData) : null;
+  }, []);
+
+  useEffect(() => {
+    dispatch(initializeJewelries(jewelries));
+    stone && dispatch(initializeStone(stone));
+    return () => {
+      dispatch(removeAll());
+      dispatch(removeStone());
+    };
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(addSearchInput(decodeURI(params.charName as string)));
+  }, [params]);
 
   return (
     <div>
@@ -47,10 +84,7 @@ export default function Fittings(props: Props) {
         <Tab label={"보석 핏"} />
       </Tabs>
       <FittingTabPanel index={0} value={value}>
-        <EngravingFittings
-          engravings={data.ArmoryEngraving.Engravings}
-          equipments={data.ArmoryEquipment}
-        />
+        <EngravingFittings />
       </FittingTabPanel>
       <FittingTabPanel index={1} value={value}>
         <Typography textAlign={"center"} py={{ xs: 2, sm: 4, md: 6 }}>

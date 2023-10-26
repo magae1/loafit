@@ -1,11 +1,13 @@
 import _ from "underscore";
-import { parse } from "node-html-parser";
+import { HTMLElement, parse } from "node-html-parser";
 
 import {
   TArmoryEquipment,
   TItemOption,
   ITEM_OPTION_TYPES,
   TJewelry,
+  TActiveEngravingEffect,
+  TStone,
 } from "@/libs/types";
 
 type TItemPartBox = {
@@ -65,7 +67,8 @@ const itemPartBoxParser = (v: TItemPartBox): TItemOption[] => {
       })
       .value();
   } else if (type === "팔찌 효과") {
-    return _.chain(parse(v.Element_001).text.match(/[가-힣]* \+[0-9]+/g))
+    const element1 = parse(v.Element_001);
+    return _.chain(element1.text.match(/[가-힣]* \+[0-9]+/g))
       .map((v) => {
         const [name, value] = v.split(" ");
         return {
@@ -125,5 +128,23 @@ export const equipmentParser = (equipment: TArmoryEquipment): TJewelry => {
       Level: null,
       Options: options.value(),
     },
+  };
+};
+
+const optionToCurValues = (option: TItemOption): TActiveEngravingEffect => {
+  return {
+    Name: option.OptionName,
+    Value: option.Value,
+    IsPenalty: option.IsPenalty,
+  };
+};
+
+export const stoneParser = (equipment: TArmoryEquipment): TStone => {
+  const data = equipmentParser(equipment);
+  const stoneOptions = data.item?.Options.map((v) => optionToCurValues(v));
+  return {
+    currentEffects: stoneOptions ?? [],
+    codeName: data.codeName,
+    item: data.item,
   };
 };

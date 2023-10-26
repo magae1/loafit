@@ -1,4 +1,6 @@
+"use client";
 import Image from "next/image";
+import { useCallback, useMemo } from "react";
 import {
   ListItem,
   IconButton,
@@ -6,48 +8,120 @@ import {
   ListItemAvatar,
   ListItemText,
   Typography,
+  Stack,
+  Chip,
 } from "@mui/material";
-import { Delete, Folder } from "@mui/icons-material";
+import { RemoveCircle, AddCircleOutlined, Restore } from "@mui/icons-material";
+import _ from "underscore";
+import { useDispatch } from "react-redux";
 
-import { TJewelry } from "@/libs/types";
+import QualityLabel from "@/components/QualityLabel";
+import { wearingType } from "@/libs/types";
+import { useAppSelector } from "@/redux/store";
+import { removeOne, restoreOne } from "@/redux/features/jewelriesSlice";
 
 interface Props {
-  jewelryData: TJewelry;
+  type: keyof wearingType;
 }
 
 export default function JewelryListItem(props: Props) {
-  const { codeName, item } = props.jewelryData;
-
-  const effects = item?.Options.map((v) => `${v.OptionName}: ${v.Value}`).join(
-    ", ",
+  const { type } = props;
+  const dispatch = useDispatch();
+  const currJewelry = useAppSelector(
+    (state) => state.jewelries.value.curr[type],
   );
+  const prevJewelry = useAppSelector(
+    (state) => state.jewelries.value.prev[type],
+  );
+
+  const onClickSecondary = useCallback(() => {
+    if (currJewelry.item) {
+      dispatch(removeOne(type));
+    }
+  }, [dispatch, currJewelry]);
+
+  const avatar = useMemo(() => {
+    if (currJewelry.item) {
+      return (
+        <>
+          <div style={{ position: "absolute", left: -5, top: -5 }}>
+            <QualityLabel value={currJewelry.item.GradeQuality} />
+          </div>
+          <Avatar sx={{ bgcolor: "inherit" }}>
+            <Image
+              src={currJewelry.item.Icon}
+              alt={`${currJewelry.item.Name} 아이콘`}
+              unoptimized
+              fill={true}
+            />
+          </Avatar>
+        </>
+      );
+    }
+    if (prevJewelry.item) {
+      return (
+        <Avatar>
+          <IconButton
+            onClick={() => {
+              dispatch(restoreOne(type));
+            }}
+          >
+            <Restore />
+          </IconButton>
+        </Avatar>
+      );
+    }
+    return <Avatar>{currJewelry.codeName[0]}</Avatar>;
+  }, [currJewelry]);
+
+  const isWearing = !!currJewelry.item;
+  const hasPrevItem = !isWearing && !!prevJewelry.item;
 
   return (
     <ListItem
-      disablePadding
       secondaryAction={
-        <IconButton edge="end" aria-label="delete">
-          <Delete />
+        <IconButton edge="end" aria-label="delete" onClick={onClickSecondary}>
+          {isWearing ? <RemoveCircle /> : <AddCircleOutlined />}
         </IconButton>
       }
+      sx={{ minHeight: "68px" }}
     >
-      <ListItemAvatar>
-        <Avatar sx={{ bgcolor: "inherit" }}>
-          {item ? (
-            <Image src={item.Icon} alt={`${item.Name} 아이콘`} fill={true} />
-          ) : (
-            <Folder />
-          )}
-        </Avatar>
+      <ListItemAvatar sx={{ position: "relative" }}>
+        <>{avatar}</>
       </ListItemAvatar>
       <ListItemText
-        disableTypography
+        disableTypography={!!currJewelry.item}
         primary={
-          <Typography noWrap={true}>
-            {item ? `[${item.Grade}] ${item.Name}` : codeName}
-          </Typography>
+          isWearing && (
+            <Typography>
+              {currJewelry.item
+                ? `[${currJewelry.item.Grade}] ${currJewelry.item.Name}`
+                : currJewelry.codeName}
+            </Typography>
+          )
         }
-        secondary={effects}
+        secondary={
+          isWearing ? (
+            <Stack
+              spacing={{ xs: 0, sm: 1 }}
+              direction={"row"}
+              useFlexGap
+              flexWrap={"wrap"}
+            >
+              {currJewelry.item?.Options.map((v) => (
+                <Chip
+                  key={_.uniqueId("jewelry-options")}
+                  size={"small"}
+                  label={`${v.OptionName} ${v.Value}`}
+                />
+              ))}
+            </Stack>
+          ) : (
+            <Typography>
+              장착 중인 {currJewelry.codeName}가 없습니다.
+            </Typography>
+          )
+        }
       />
     </ListItem>
   );

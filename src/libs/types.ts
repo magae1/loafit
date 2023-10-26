@@ -9,7 +9,12 @@ export enum ITEM_OPTION_TYPES {
   GEM_SKILL_DAMAGE_IDENTITY = "GEM_SKILL_DAMAGE_IDENTITY",
   BRACELET_RANDOM_SLOT = "BRACELET_RANDOM_SLOT",
 }
-export const JEWELRIES = ["목걸이", "귀걸이", "반지", "팔찌"];
+export enum JEWELRY_TYPES {
+  NECKLACE = "목걸이",
+  EARRING = "귀걸이",
+  RING = "반지",
+  BRACELET = "팔찌",
+}
 export const STONE = "어빌리티 스톤";
 
 export type TStat = {
@@ -129,7 +134,7 @@ export type TItemOption = {
   ClassName: string | null;
 };
 
-export type IAuctionItem = {
+export type TAuctionItem = {
   Name: string;
   Grade: string;
   Tier: number;
@@ -149,8 +154,18 @@ export type TCharacterData = {
 
 export type TJewelry = {
   codeName: string;
-  item: IAuctionItem | null;
+  item: TAuctionItem | null;
 };
+
+export type TActiveEngravingEffect = {
+  Name: string;
+  Value: number;
+  IsPenalty: boolean;
+};
+
+export interface TStone extends TJewelry {
+  currentEffects: TActiveEngravingEffect[];
+}
 
 export type TMarketItem = {
   Id: number;
@@ -190,4 +205,13 @@ export type TNotice = {
   Date: Date;
   Link: string;
   Type: string;
+};
+
+export type wearingType = {
+  necklace: TJewelry;
+  earring1: TJewelry;
+  earring2: TJewelry;
+  ring1: TJewelry;
+  ring2: TJewelry;
+  bracelet: TJewelry;
 };

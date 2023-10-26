@@ -1,10 +1,11 @@
-import { Grid, Stack, Typography, Divider } from "@mui/material";
+import { Grid, Stack } from "@mui/material";
 
 import { TCharacterData } from "@/libs/types";
 import FittingTabs from "@/app/character/[charName]/_components/FittingTabs";
 import BoardItemWrapper from "@/app/character/[charName]/_components/profile/BoardItemWrapper";
 import EngravingEffectsBoard from "@/app/character/[charName]/_components/profile/EngravingEffectsBoard";
 import StatsBoard from "@/app/character/[charName]/_components/profile/StatsBoard";
+import BasicProfileBoard from "@/app/character/[charName]/_components/profile/BasicProfileBoard";
 
 interface Props {
   params: { charName: string };
@@ -21,6 +22,9 @@ async function getCharData(characterName: string) {
   const res = await fetch(
     `${process.env.LOA_URL}/armories/characters/${characterName}`,
     {
+      next: {
+        revalidate: 15,
+      },
       headers: {
         Authorization: `Bearer ${process.env.LOA_JWT}`,
       },
@@ -49,42 +53,18 @@ export default async function Page(props: Props) {
           })`,
           backgroundRepeat: "no-repeat",
           backgroundPositionX: "center",
-          backgroundPositionY: "66px",
+          backgroundPositionY: "48px",
           backgroundColor: "#15181d",
           backgroundAttachment: "fixed",
-          zIndex: -100,
         }}
       >
         <Grid container>
           <Grid item xs={5}>
             <Stack
               bgcolor={"background.paper"}
-              sx={{ px: 1, py: 2, m: 1, opacity: 0.8 }}
+              sx={{ px: 1, pt: 2, m: 1, opacity: 0.8 }}
             >
-              <Typography component={"div"} variant={"subtitle2"}>
-                {charData.ArmoryProfile.Title}
-              </Typography>
-              <Typography component={"div"} variant={"h4"}>
-                {charData.ArmoryProfile.CharacterName}
-              </Typography>
-              <div style={{ display: "flex", justifyContent: "end" }}>
-                <Typography variant={"button"} gutterBottom>
-                  {charData.ArmoryProfile.CharacterClassName}
-                </Typography>
-              </div>
-              <Divider>
-                <Typography variant={"button"}>캐릭터/아이템 레벨</Typography>
-              </Divider>
-              <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <Typography
-                  variant={"h6"}
-                  gutterBottom
-                >{`Lv. ${charData.ArmoryProfile.CharacterLevel}`}</Typography>
-                <Typography
-                  variant={"h6"}
-                  gutterBottom
-                >{`Lv. ${charData.ArmoryProfile.ItemAvgLevel}`}</Typography>
-              </div>
+              <BasicProfileBoard data={charData.ArmoryProfile} />
               <BoardItemWrapper>
                 <StatsBoard data={charData.ArmoryProfile.Stats} />
                 <EngravingEffectsBoard

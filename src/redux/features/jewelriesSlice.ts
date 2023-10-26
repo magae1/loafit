@@ -1,24 +1,40 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import _ from "underscore";
 
-import { IAuctionItem, TJewelry, JEWELRIES } from "@/libs/types";
+import {
+  TJewelry,
+  TAuctionItem,
+  JEWELRY_TYPES,
+  wearingType,
+  TActiveEngravingEffect,
+} from "@/libs/types";
 
-type wearingType = {
-  jewelry: TJewelry[];
-  maxCount: number;
+type stateType = {
+  value: {
+    prev: wearingType;
+    curr: wearingType;
+  };
 };
 
-const JEWELRY_DATA: wearingType[] = [
-  { jewelry: [], maxCount: 1 },
-  { jewelry: [], maxCount: 2 },
-  { jewelry: [], maxCount: 2 },
-  { jewelry: [], maxCount: 1 },
-];
-
-type jewelriesType = _.Dictionary<wearingType>;
-
-const defaultState = {
-  value: _.object(JEWELRIES, JEWELRY_DATA) as jewelriesType,
+const defaultState: stateType = {
+  value: {
+    prev: {
+      necklace: { codeName: JEWELRY_TYPES.NECKLACE, item: null },
+      earring1: { codeName: JEWELRY_TYPES.EARRING, item: null },
+      earring2: { codeName: JEWELRY_TYPES.EARRING, item: null },
+      ring1: { codeName: JEWELRY_TYPES.RING, item: null },
+      ring2: { codeName: JEWELRY_TYPES.RING, item: null },
+      bracelet: { codeName: JEWELRY_TYPES.BRACELET, item: null },
+    },
+    curr: {
+      necklace: { codeName: JEWELRY_TYPES.NECKLACE, item: null },
+      earring1: { codeName: JEWELRY_TYPES.EARRING, item: null },
+      earring2: { codeName: JEWELRY_TYPES.EARRING, item: null },
+      ring1: { codeName: JEWELRY_TYPES.RING, item: null },
+      ring2: { codeName: JEWELRY_TYPES.RING, item: null },
+      bracelet: { codeName: JEWELRY_TYPES.BRACELET, item: null },
+    },
+  },
 };
 
 export const jewelries = createSlice({
@@ -26,15 +42,44 @@ export const jewelries = createSlice({
   initialState: defaultState,
   reducers: {
     initializeJewelries: (state, action: PayloadAction<TJewelry[]>) => {
-      _.chain(action.payload)
-        .groupBy((v) => v.codeName)
-        .each((val, key) => {
-          state.value[key].jewelry = val;
-        });
+      _.each(action.payload, (v) => {
+        const targetKey = _.findKey(
+          state.value.curr,
+          (val) => val.codeName === v.codeName && _.isNull(val.item),
+        );
+        if (targetKey) {
+          state.value.curr[targetKey] = v;
+        }
+      });
     },
-    removeAll: () => defaultState,
+    addOne: (
+      state,
+      action: PayloadAction<{ type: keyof wearingType; item: TAuctionItem }>,
+    ) => {
+      state.value.prev[action.payload.type] =
+        state.value.curr[action.payload.type];
+      state.value.curr[action.payload.type].item = action.payload.item;
+    },
+    removeOne: (state, action: PayloadAction<keyof wearingType>) => {
+      state.value.prev[action.payload] = state.value.curr[action.payload];
+      state.value.curr[action.payload] =
+        defaultState.value.curr[action.payload];
+    },
+    restoreOne: (state, action: PayloadAction<keyof wearingType>) => {
+      state.value.curr[action.payload] = state.value.prev[action.payload];
+      state.value.prev[action.payload] =
+        defaultState.value.prev[action.payload];
+    },
+    removeAll: (state) => {
+      state.value.prev = state.value.curr;
+
+      _.each(state.value.curr, (v, k) => {
+        v["item"] = null;
+      });
+    },
   },
 });
 
 export default jewelries.reducer;
-export const { initializeJewelries, removeAll } = jewelries.actions;
+export const { initializeJewelries, restoreOne, removeOne, removeAll } =
+  jewelries.actions;

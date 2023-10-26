@@ -1,11 +1,8 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useState } from "react";
 import { FormControl, IconButton, Input, InputAdornment } from "@mui/material";
 import { AccountCircle, Clear } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
-
-import { addSearchInput } from "@/redux/features/characterSearchSlice";
-import { useRouter } from "next/navigation";
 
 interface Props {
   width?: string | number;
@@ -13,14 +10,12 @@ interface Props {
 
 export default function SearchBar(props: Props) {
   const { width } = props;
-  const dispatch = useDispatch();
   const router = useRouter();
 
   const [inputValue, setInputValue] = useState("");
   const onSubmitHandle = useCallback(
     (e: FormEvent) => {
       e.preventDefault();
-      dispatch(addSearchInput(inputValue));
       router.push(`/character/${inputValue}`);
     },
     [inputValue],

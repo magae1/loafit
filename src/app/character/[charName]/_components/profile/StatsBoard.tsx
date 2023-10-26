@@ -1,6 +1,6 @@
 import { Divider, Grid, Tooltip, Typography } from "@mui/material";
 import _ from "underscore";
-import { parse } from "node-html-parser";
+import { HTMLElement, TextNode, parse, Node } from "node-html-parser";
 
 import { TStat } from "@/libs/types";
 
@@ -10,20 +10,44 @@ const sumStats = (stats: TStat[]) =>
     .reduce((a, b) => a + b)
     .value();
 
+const coloredFont = (element: Node) => {
+  if (element instanceof TextNode) return element.rawText;
+  if (element instanceof HTMLElement && element.rawTagName === "font") {
+    const color = element.rawAttrs.match(/#[0-9a-f]+/i)?.[0];
+    return (
+      <strong key={_.uniqueId("coloredFont")} style={{ color: color }}>
+        {element.text}
+      </strong>
+    );
+  }
+  return null;
+};
+
 function StatsItem({ stat, disabled }: { stat: TStat; disabled?: boolean }) {
-  const elements = parse(stat.Tooltip.join("\n"));
+  const elements = stat.Tooltip.map((v) => parse(v).firstChild);
+  const children = elements.map((v) => v.childNodes);
+
   return (
-    <div style={{ flexGrow: 1 }}>
-      <Tooltip title={elements.text} arrow>
-        <Typography
-          variant={"subtitle2"}
-          color={disabled ? "divider" : undefined}
-          textAlign={"center"}
-        >
-          {stat.Type} {stat.Value}
+    <Tooltip
+      title={
+        <Typography variant={"caption"}>
+          {_.chain(children)
+            .flatten()
+            .map((v) => coloredFont(v))
+            .value()}
         </Typography>
-      </Tooltip>
-    </div>
+      }
+      arrow
+    >
+      <Typography
+        variant={"subtitle2"}
+        component={"p"}
+        color={disabled ? "divider" : undefined}
+        textAlign={"center"}
+      >
+        {stat.Type} {stat.Value}
+      </Typography>
+    </Tooltip>
   );
 }
 

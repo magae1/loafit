@@ -25,6 +25,11 @@ export const theme = extendTheme({
         elevation: 1,
       },
     },
+    MuiTooltip: {
+      defaultProps: {
+        enterTouchDelay: 300,
+      },
+    },
   },
   colorSchemes: {
     light: {

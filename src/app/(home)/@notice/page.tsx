@@ -9,6 +9,9 @@ import GridItem from "@/app/(home)/_component/GridItem";
 async function getNotices() {
   const res = await fetch(`${process.env.LOA_URL}/news/notices`, {
     headers: { Authorization: `Bearer ${process.env.LOA_JWT}` },
+    next: {
+      revalidate: 3600,
+    },
   });
 
   if (!res.ok) throw new Error();
