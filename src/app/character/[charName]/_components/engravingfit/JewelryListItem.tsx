@@ -19,6 +19,7 @@ import QualityLabel from "@/components/QualityLabel";
 import { wearingType } from "@/libs/types";
 import { useAppSelector } from "@/redux/store";
 import { removeOne, restoreOne } from "@/redux/features/jewelriesSlice";
+import FittingListItem from "@/components/FittingListItem";
 
 interface Props {
   type: keyof wearingType;
@@ -72,23 +73,18 @@ export default function JewelryListItem(props: Props) {
       );
     }
     return <Avatar>{currJewelry.codeName[0]}</Avatar>;
-  }, [currJewelry]);
+  }, [currJewelry, prevJewelry]);
 
   const isWearing = !!currJewelry.item;
   const hasPrevItem = !isWearing && !!prevJewelry.item;
 
   return (
-    <ListItem
-      secondaryAction={
-        <IconButton edge="end" aria-label="delete" onClick={onClickSecondary}>
-          {isWearing ? <RemoveCircle /> : <AddCircleOutlined />}
-        </IconButton>
-      }
+    <FittingListItem
+      is_none={!isWearing ? "yes" : null}
+      onClick={onClickSecondary}
       sx={{ minHeight: "68px" }}
     >
-      <ListItemAvatar sx={{ position: "relative" }}>
-        <>{avatar}</>
-      </ListItemAvatar>
+      <ListItemAvatar sx={{ position: "relative" }}>{avatar}</ListItemAvatar>
       <ListItemText
         disableTypography={!!currJewelry.item}
         primary={
@@ -123,6 +119,6 @@ export default function JewelryListItem(props: Props) {
           )
         }
       />
-    </ListItem>
+    </FittingListItem>
   );
 }

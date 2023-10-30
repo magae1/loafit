@@ -8,27 +8,21 @@ import {
   Rating,
   Typography,
   ListItemText,
-  IconButton,
   Avatar,
   ListItemAvatar,
-  ListSubheader,
 } from "@mui/material";
-import {
-  RadioButtonChecked,
-  RadioButtonUnchecked,
-  RemoveCircle,
-  AddCircleOutlined,
-} from "@mui/icons-material";
+import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { red, blue } from "@mui/material/colors";
 import _ from "underscore";
 import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/redux/store";
-import { TActiveEngravingEffect } from "@/libs/types";
-import { changeEngValue } from "@/redux/features/stoneSlice";
+import { TActiveEngraving } from "@/libs/types";
+import { changeEngValue, removeStone } from "@/redux/features/stoneSlice";
+import FittingListItem from "@/components/FittingListItem";
 
 interface Props {
-  option: TActiveEngravingEffect;
+  option: TActiveEngraving;
   onChangeValue: (
     e: SyntheticEvent<Element, Event>,
     value: number | null,
@@ -39,7 +33,7 @@ function EngravingOptionItem(props: Props) {
   const { Name, Value, IsPenalty } = props.option;
 
   return (
-    <ListItem>
+    <ListItem sx={{ pr: 3 }}>
       <Grid container>
         <Grid item xs>
           <Typography>{Name}</Typography>
@@ -70,10 +64,10 @@ export default function StoneBoard() {
   const dispatch = useDispatch();
 
   const StoneStates = useMemo(() => {
-    if (_.isEmpty(stone.currentEffects)) {
+    if (_.isEmpty(stone)) {
       return null;
     }
-    return stone.currentEffects.map((v, i) => (
+    return stone.engravings.map((v, i) => (
       <EngravingOptionItem
         key={_.uniqueId("stone-engraving-rate-item")}
         option={v}
@@ -82,16 +76,15 @@ export default function StoneBoard() {
         }}
       />
     ));
-  }, [stone]);
+  }, [stone, dispatch]);
 
   return (
     <List>
-      <ListItem
-        secondaryAction={
-          <IconButton>
-            {stone.item ? <RemoveCircle /> : <AddCircleOutlined />}
-          </IconButton>
-        }
+      <FittingListItem
+        is_none={stone.item ? null : "y"}
+        onClick={() => {
+          dispatch(removeStone());
+        }}
         sx={{ minHeight: "68px" }}
       >
         <ListItemAvatar>
@@ -103,7 +96,9 @@ export default function StoneBoard() {
                 src={stone.item.Icon}
                 alt={`${stone.item.Name} 아이콘`}
               />
-            ) : null}
+            ) : (
+              "돌"
+            )}
           </Avatar>
         </ListItemAvatar>
         <ListItemText
@@ -114,7 +109,7 @@ export default function StoneBoard() {
             stone.item ? undefined : "장착 중인 어빌리티 스톤이 없습니다."
           }
         />
-      </ListItem>
+      </FittingListItem>
       <List dense>{StoneStates}</List>
     </List>
   );

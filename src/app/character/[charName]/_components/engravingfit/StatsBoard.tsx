@@ -1,25 +1,11 @@
 "use client";
 import { useMemo, useRef } from "react";
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Divider,
-  Paper,
-  Box,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import _ from "underscore";
-import {
-  useSpring,
-  config,
-  animated,
-  useIsomorphicLayoutEffect,
-} from "@react-spring/web";
+import { animated } from "@react-spring/web";
 
 import { useAppSelector } from "@/redux/store";
-import { ITEM_OPTION_TYPES } from "@/libs/types";
+import { TActiveStat } from "@/libs/types";
 
 const STAT_TYPES = ["치명", "특화", "제압", "신속", "인내", "숙련"];
 
@@ -27,7 +13,7 @@ const AnimateTypo = animated(Typography);
 
 function StatItem({ name, value }: { name: string; value: number }) {
   return (
-    <Box>
+    <Box px={1}>
       <Typography variant={"subtitle2"} textAlign={"center"}>
         {name}
       </Typography>
@@ -39,36 +25,33 @@ function StatItem({ name, value }: { name: string; value: number }) {
 }
 
 export default function StatsBoard() {
-  const basicStats = useRef<_.Dictionary<number>>(
+  const defaultStats = useRef<_.Dictionary<number>>(
     _.object(STAT_TYPES, new Array(STAT_TYPES.length).fill(0)),
   );
 
   const jewelries = useAppSelector((state) => state.jewelries.value.curr);
 
   const currentStats = useMemo(() => {
-    const obj = _.clone(basicStats.current);
-
-    _.chain(jewelries)
-      .values()
-      .map((v) => v.item?.Options)
+    return _.chain(jewelries)
+      .map((v, key): TActiveStat[] => {
+        return v.stats;
+      })
       .flatten()
-      .compact()
-      .filter((v) => v.Type === ITEM_OPTION_TYPES.STAT)
-      .each((v, k) => {
-        if (v.OptionName in obj) {
-          obj[v.OptionName] += v.Value;
-        }
-      });
-
-    return obj;
+      .filter((v) => _.contains(STAT_TYPES, v.Name))
+      .groupBy((v) => v.Name)
+      .mapObject((v, k) => {
+        return _.reduce(v, (prev, curr) => curr.Value + prev, 0);
+      })
+      .defaults(defaultStats.current)
+      .value();
   }, [jewelries]);
 
   return (
     <Stack
       my={2}
       direction={"row"}
+      flexWrap={"wrap"}
       justifyContent={"space-evenly"}
-      divider={<Divider orientation={"vertical"} flexItem />}
     >
       {_.chain(currentStats)
         .pairs()

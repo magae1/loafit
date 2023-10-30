@@ -1,76 +1,117 @@
-import { List, ListItem, ListItemText, Paper } from "@mui/material";
+"use client";
+import {
+  List,
+  Divider,
+  Grid,
+  ListItem,
+  ListItemText,
+  Typography,
+  Box,
+  Stack,
+} from "@mui/material";
 import _ from "underscore";
 
 import { useAppSelector } from "@/redux/store";
-import {
-  ITEM_OPTION_TYPES,
-  TActiveEngravingEffect,
-  TJewelry,
-} from "@/libs/types";
+import { TActiveEngraving } from "@/libs/types";
+import { useMemo } from "react";
 
-function EngravingItem({ data }: { data: TActiveEngravingEffect }) {
+function EngravingEffect({
+  name,
+  data,
+  sum,
+}: {
+  name: string;
+  data: TActiveEngraving[];
+  sum: number;
+}) {
+  const level = Math.min(3, Math.floor(sum / 5));
   return (
-    <ListItem>
-      <ListItemText primary={data.Name} secondary={data.Value} />
-    </ListItem>
+    <Box>
+      <Typography
+        sx={{
+          textDecoration: level <= 0 ? "line-through" : undefined,
+          fontWeight: Math.max(100, level * 300),
+        }}
+      >
+        {name} Lv.{level}
+      </Typography>
+
+      <Typography variant={"caption"}>
+        {data.map((v) => v.Value).join("+")} = {sum}
+      </Typography>
+    </Box>
   );
 }
 
 export default function EngravingBoard() {
   const jewelries = useAppSelector((state) => state.jewelries.value.curr);
-  const stoneEffects = useAppSelector(
-    (state) => state.abilityStone.value.currentEffects,
+  const stoneEngravings = useAppSelector(
+    (state) => state.abilityStone.value.engravings,
   );
+  const engravingSlots = useAppSelector((state) => state.engravingSlots.value);
 
-  const jewelryEffects = _.chain(jewelries)
-    .values()
-    .pluck("item")
-    .compact()
-    .pluck("Options")
-    .flatten()
-    .filter((v) => v.Type === ITEM_OPTION_TYPES.ABILITY_ENGRAVE)
-    .map(
-      (v): TActiveEngravingEffect => ({
-        Name: v.OptionName,
-        Value: v.Value,
-        IsPenalty: v.IsPenalty,
-      }),
-    )
-    .value();
+  const totalEngravings = useMemo(() => {
+    const jewelryEngravings: TActiveEngraving[] = _.chain(jewelries)
+      .map((v): TActiveEngraving[] => v.engravings)
+      .flatten()
+      .value();
 
-  const allEffects = _.chain(stoneEffects.concat(jewelryEffects))
-    .groupBy((v) => v.Name)
-    .mapObject((v, k) => {
-      return _.reduce(
-        v,
-        (memo, one) => {
-          return {
-            Name: one.Name,
-            Value: memo.Value + one.Value,
-            IsPenalty: one.IsPenalty,
-          };
-        },
-        { Name: "", Value: 0, IsPenalty: false },
-      );
-    })
-    .values()
-    .value()
-    .sort((a, b) => {
-      if (!a.IsPenalty) {
-        if (b.IsPenalty) return -1;
-        return a.Value < b.Value ? 1 : -1;
-      }
-      if (!b.IsPenalty) return 1;
-      return a.Value < b.Value ? 1 : -1;
-    });
+    const slotEngravings: TActiveEngraving[] = _.chain(engravingSlots)
+      .filter((v) => v.isActive)
+      .map((v) => v.Effect)
+      .value();
+
+    return _.partition(
+      jewelryEngravings.concat(slotEngravings, stoneEngravings),
+      (v) => v.IsPenalty,
+    );
+  }, [jewelries, stoneEngravings, engravingSlots]);
 
   return (
-    <Paper>
-      <List dense>
-        {allEffects.map((v) => (
-          <EngravingItem key={_.uniqueId("engraving-effects-item")} data={v} />
-        ))}
-      </List>
-    </Paper>
+    <Grid container spacing={{ xs: 1, sm: 3 }} py={1}>
+      <Grid item xs>
+        <Stack>
+          {_.chain(totalEngravings[1])
+            .groupBy((v) => v.Name)
+            .mapObject((v, k) => {
+              const sum = _.reduce(v, (prev, curr) => prev + curr.Value, 0);
+              return { sum: sum, list: v };
+            })
+            .pairs()
+            .sortBy((v) => -v[1].sum)
+            .map((v, k) => (
+              <EngravingEffect
+                key={_.uniqueId("engraving-effect-item")}
+                name={v[0]}
+                data={v[1].list}
+                sum={v[1].sum}
+              />
+            ))
+            .value()}
+        </Stack>
+      </Grid>
+      <Divider orientation={"vertical"} flexItem />
+      <Grid item xs>
+        <Stack>
+          {_.chain(totalEngravings[0])
+            .groupBy((v) => v.Name)
+            .mapObject((v, k) => {
+              const sum = _.reduce(v, (prev, curr) => prev + curr.Value, 0);
+              return { sum: sum, list: v };
+            })
+            .pairs()
+            .sortBy((v) => -v[1].sum)
+            .map((v, k) => (
+              <EngravingEffect
+                key={_.uniqueId("engraving-effect-item")}
+                name={v[0]}
+                data={v[1].list}
+                sum={v[1].sum}
+              />
+            ))
+            .value()}
+        </Stack>
+      </Grid>
+    </Grid>
   );
 }

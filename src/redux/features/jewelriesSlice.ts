@@ -6,7 +6,6 @@ import {
   TAuctionItem,
   JEWELRY_TYPES,
   wearingType,
-  TActiveEngravingEffect,
 } from "@/libs/types";
 
 type stateType = {
@@ -16,25 +15,47 @@ type stateType = {
   };
 };
 
-const defaultState: stateType = {
-  value: {
-    prev: {
-      necklace: { codeName: JEWELRY_TYPES.NECKLACE, item: null },
-      earring1: { codeName: JEWELRY_TYPES.EARRING, item: null },
-      earring2: { codeName: JEWELRY_TYPES.EARRING, item: null },
-      ring1: { codeName: JEWELRY_TYPES.RING, item: null },
-      ring2: { codeName: JEWELRY_TYPES.RING, item: null },
-      bracelet: { codeName: JEWELRY_TYPES.BRACELET, item: null },
-    },
-    curr: {
-      necklace: { codeName: JEWELRY_TYPES.NECKLACE, item: null },
-      earring1: { codeName: JEWELRY_TYPES.EARRING, item: null },
-      earring2: { codeName: JEWELRY_TYPES.EARRING, item: null },
-      ring1: { codeName: JEWELRY_TYPES.RING, item: null },
-      ring2: { codeName: JEWELRY_TYPES.RING, item: null },
-      bracelet: { codeName: JEWELRY_TYPES.BRACELET, item: null },
-    },
+const basicValue = {
+  necklace: {
+    codeName: JEWELRY_TYPES.NECKLACE,
+    item: null,
+    stats: [],
+    engravings: [],
   },
+  earring1: {
+    codeName: JEWELRY_TYPES.EARRING,
+    item: null,
+    stats: [],
+    engravings: [],
+  },
+  earring2: {
+    codeName: JEWELRY_TYPES.EARRING,
+    item: null,
+    stats: [],
+    engravings: [],
+  },
+  ring1: {
+    codeName: JEWELRY_TYPES.RING,
+    item: null,
+    stats: [],
+    engravings: [],
+  },
+  ring2: {
+    codeName: JEWELRY_TYPES.RING,
+    item: null,
+    stats: [],
+    engravings: [],
+  },
+  bracelet: {
+    codeName: JEWELRY_TYPES.BRACELET,
+    item: null,
+    stats: [],
+    engravings: [],
+  },
+};
+
+const defaultState: stateType = {
+  value: { prev: basicValue, curr: basicValue },
 };
 
 export const jewelries = createSlice({
@@ -61,9 +82,14 @@ export const jewelries = createSlice({
       state.value.curr[action.payload.type].item = action.payload.item;
     },
     removeOne: (state, action: PayloadAction<keyof wearingType>) => {
-      state.value.prev[action.payload] = state.value.curr[action.payload];
-      state.value.curr[action.payload] =
-        defaultState.value.curr[action.payload];
+      const type = action.payload;
+      state.value.prev[type] = {
+        codeName: state.value.curr[type].codeName,
+        item: state.value.curr[type].item,
+        stats: state.value.curr[type].stats,
+        engravings: state.value.curr[type].engravings,
+      };
+      state.value.curr[type] = basicValue[type];
     },
     restoreOne: (state, action: PayloadAction<keyof wearingType>) => {
       state.value.curr[action.payload] = state.value.prev[action.payload];

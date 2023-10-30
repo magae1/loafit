@@ -3,13 +3,15 @@ import { configureStore } from "@reduxjs/toolkit";
 
 import jewelriesReducer from "@/redux/features/jewelriesSlice";
 import characterSearchReducer from "@/redux/features/characterSearchSlice";
-import abilityStone from "@/redux/features/stoneSlice";
+import abilityStoneReducer from "@/redux/features/stoneSlice";
+import engravingSlotsReducer from "@/redux/features/engravingSlotsSlice";
 
 export const store = configureStore({
   reducer: {
     jewelries: jewelriesReducer,
     characterSearch: characterSearchReducer,
-    abilityStone: abilityStone,
+    abilityStone: abilityStoneReducer,
+    engravingSlots: engravingSlotsReducer,
   },
 });
 

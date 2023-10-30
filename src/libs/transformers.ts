@@ -6,8 +6,12 @@ import {
   TItemOption,
   ITEM_OPTION_TYPES,
   TJewelry,
-  TActiveEngravingEffect,
+  TActiveEngraving,
   TStone,
+  TEngraving,
+  TEngravingSlot,
+  TFittingItem,
+  TActiveStat,
 } from "@/libs/types";
 
 type TItemPartBox = {
@@ -27,6 +31,18 @@ type TIndentString = {
   bPoint: number;
   contentStr: string;
   pointType: number;
+};
+
+type TEngraveSkillTitle = {
+  forceMiddleText: string;
+  leftText: string;
+  name: string;
+  rightText: string;
+  slotData: {
+    iconGrade: number;
+    iconPath: string;
+    imagePath: string;
+  };
 };
 
 const indentStringParser = (v: TIndentString[]): (TItemOption | null)[] =>
@@ -85,6 +101,11 @@ const itemPartBoxParser = (v: TItemPartBox): TItemOption[] => {
   return [];
 };
 
+const singleTextBoxParser = (v: TEngraveSkillTitle): number => {
+  const pointElement = parse(v.leftText);
+  return parseInt(pointElement.text.split(" ").pop() ?? "0");
+};
+
 const itemTitleParser = (v: TItemTitle): number[] => {
   const tierElement = parse(v.leftStr2).firstChild;
   const gradeQuality = v.qualityValue;
@@ -92,14 +113,14 @@ const itemTitleParser = (v: TItemTitle): number[] => {
   return [tier ? parseInt(tier) : -1, gradeQuality];
 };
 
-export const equipmentParser = (equipment: TArmoryEquipment): TJewelry => {
+const equipmentParser = (equipment: TArmoryEquipment): TFittingItem => {
   const tooltipObj = JSON.parse(equipment.Tooltip);
 
   const titleObjects = _.chain<TItemTitle>(tooltipObj)
     .values()
     .find((v) => v.type === "ItemTitle");
 
-  const options = _.chain(tooltipObj)
+  const options = _.chain<TItemOption[]>(tooltipObj)
     .values()
     .groupBy((v) => v.type)
     .map((i, key) => {
@@ -131,7 +152,7 @@ export const equipmentParser = (equipment: TArmoryEquipment): TJewelry => {
   };
 };
 
-const optionToCurValues = (option: TItemOption): TActiveEngravingEffect => {
+const optionToEngraving = (option: TItemOption): TActiveEngraving => {
   return {
     Name: option.OptionName,
     Value: option.Value,
@@ -139,12 +160,53 @@ const optionToCurValues = (option: TItemOption): TActiveEngravingEffect => {
   };
 };
 
+const optionToStat = (option: TItemOption): TActiveStat => {
+  return {
+    Name: option.OptionName,
+    Value: option.Value,
+  };
+};
+
 export const stoneParser = (equipment: TArmoryEquipment): TStone => {
   const data = equipmentParser(equipment);
-  const stoneOptions = data.item?.Options.map((v) => optionToCurValues(v));
+  const engravings = data.item?.Options.map((v) => optionToEngraving(v));
   return {
-    currentEffects: stoneOptions ?? [],
+    engravings: engravings ?? [],
     codeName: data.codeName,
     item: data.item,
+  };
+};
+
+export const jewelryParser = (equipment: TArmoryEquipment): TJewelry => {
+  const data = equipmentParser(equipment);
+
+  const engravings = data.item?.Options.filter(
+    (v) => v.Type === ITEM_OPTION_TYPES.ABILITY_ENGRAVE,
+  ).map((v) => optionToEngraving(v));
+
+  const stats = data.item?.Options.filter(
+    (v) => v.Type === ITEM_OPTION_TYPES.STAT,
+  ).map((v) => optionToStat(v));
+
+  return {
+    codeName: data.codeName,
+    item: data.item,
+    stats: stats ? stats : [],
+    engravings: engravings ? engravings : [],
+  };
+};
+
+export const engravingParser = (engraving: TEngraving): TEngravingSlot => {
+  const tooltipObj = JSON.parse(engraving.Tooltip);
+  const value = singleTextBoxParser(tooltipObj.Element_001.value);
+
+  return {
+    Slot: engraving.Slot,
+    Effect: {
+      Name: engraving.Name,
+      Value: value,
+      IsPenalty: false,
+    },
+    isActive: true,
   };
 };

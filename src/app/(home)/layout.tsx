@@ -13,7 +13,6 @@ export default function Layout(props: Props) {
     <Container maxWidth={"lg"}>
       <Stack divider={<Divider />} spacing={2}>
         {children}
-        {notice}
       </Stack>
     </Container>
   );

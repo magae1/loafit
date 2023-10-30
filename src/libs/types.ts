@@ -152,20 +152,36 @@ export type TCharacterData = {
   ArmoryEngraving: TArmoryEngraving;
 };
 
-export type TJewelry = {
-  codeName: string;
-  item: TAuctionItem | null;
+export type TActiveStat = {
+  Name: string;
+  Value: number;
 };
 
-export type TActiveEngravingEffect = {
+export type TActiveEngraving = {
   Name: string;
   Value: number;
   IsPenalty: boolean;
 };
 
-export interface TStone extends TJewelry {
-  currentEffects: TActiveEngravingEffect[];
+export type TFittingItem = {
+  codeName: string;
+  item: TAuctionItem | null;
+};
+
+export interface TJewelry extends TFittingItem {
+  stats: TActiveStat[];
+  engravings: TActiveEngraving[];
 }
+
+export interface TStone extends TFittingItem {
+  engravings: TActiveEngraving[];
+}
+
+export type TEngravingSlot = {
+  Slot: number;
+  Effect: TActiveEngraving;
+  isActive: boolean;
+};
 
 export type TMarketItem = {
   Id: number;
@@ -214,4 +230,10 @@ export type wearingType = {
   ring1: TJewelry;
   ring2: TJewelry;
   bracelet: TJewelry;
+};
+
+export type optionType = {
+  Value: number;
+  Text: string;
+  Class: string;
 };

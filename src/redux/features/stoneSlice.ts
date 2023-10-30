@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-import { IAuctionItem, STONE, TStone } from "@/libs/types";
+import { TAuctionItem, STONE, TStone } from "@/libs/types";
 
 type stateType = {
   value: TStone;
@@ -8,7 +8,7 @@ type stateType = {
 
 const defaultState: stateType = {
   value: {
-    currentEffects: [],
+    engravings: [],
     codeName: STONE,
     item: null,
   },
@@ -21,8 +21,8 @@ export const abilityStone = createSlice({
     initializeStone: (state, action: PayloadAction<TStone>) => {
       state.value = action.payload;
     },
-    changeStone: (state, action: PayloadAction<IAuctionItem>) => {
-      state.value.currentEffects = action.payload.Options.map((v) => ({
+    changeStone: (state, action: PayloadAction<TAuctionItem>) => {
+      state.value.engravings = action.payload.Options.map((v) => ({
         Name: v.OptionName,
         Value: 0,
         IsPenalty: v.IsPenalty,
@@ -34,17 +34,17 @@ export const abilityStone = createSlice({
       action: PayloadAction<{ index: number; value: number | null }>,
     ) => {
       const { index, value } = action.payload;
-      if (index < 0 || index >= state.value.currentEffects.length) return;
+      if (index < 0 || index >= state.value.engravings.length) return;
       if (!value) {
-        state.value.currentEffects[index].Value = 0;
+        state.value.engravings[index].Value = 0;
         return;
       }
       if (value && value >= 0 && value <= 10) {
-        state.value.currentEffects[index].Value = value;
+        state.value.engravings[index].Value = value;
       }
     },
     removeStone: (state) => {
-      state.value.currentEffects = [];
+      state.value.engravings = [];
       state.value.item = null;
     },
   },

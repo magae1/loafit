@@ -5,15 +5,23 @@ import { Tab, Tabs, Container, Typography } from "@mui/material";
 import _ from "underscore";
 import { useDispatch } from "react-redux";
 
-import { JEWELRY_TYPES, STONE, TCharacterData } from "@/libs/types";
+import { JEWELRY_TYPES, STONE, TCharacterData, TJewelry } from "@/libs/types";
 import EngravingFittings from "@/app/character/[charName]/_components/EngravingFittings";
 import { addSearchInput } from "@/redux/features/characterSearchSlice";
-import { equipmentParser, stoneParser } from "@/libs/transformers";
+import {
+  engravingParser,
+  jewelryParser,
+  stoneParser,
+} from "@/libs/transformers";
 import {
   initializeJewelries,
   removeAll,
 } from "@/redux/features/jewelriesSlice";
 import { initializeStone, removeStone } from "@/redux/features/stoneSlice";
+import {
+  initializeSlots,
+  removeSlots,
+} from "@/redux/features/engravingSlotsSlice";
 
 interface Props {
   data: TCharacterData;
@@ -38,7 +46,7 @@ function FittingTabPanel(props: {
 }
 
 export default function Fittings(props: Props) {
-  const { ArmoryEquipment } = props.data;
+  const { ArmoryEquipment, ArmoryEngraving } = props.data;
   const params = useParams();
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
@@ -47,24 +55,33 @@ export default function Fittings(props: Props) {
     setValue(newValue);
   };
 
-  const jewelries = useMemo(() => {
-    return _.chain(ArmoryEquipment)
-      .filter((item) => _.contains(JEWELRY_TYPES, item.Type))
-      .map((item) => equipmentParser(item))
-      .value();
-  }, []);
+  const jewelries: TJewelry[] = useMemo(
+    () =>
+      _.chain(ArmoryEquipment)
+        .filter((item) => _.contains(JEWELRY_TYPES, item.Type))
+        .map((item) => jewelryParser(item))
+        .value(),
+    [],
+  );
 
   const stone = useMemo(() => {
-    const stoneData = _.find(ArmoryEquipment, (v) => v.Type === STONE);
-    return stoneData ? stoneParser(stoneData) : null;
+    const stoneEquipment = ArmoryEquipment.find((v) => v.Type === STONE);
+
+    return stoneEquipment ? stoneParser(stoneEquipment) : null;
+  }, []);
+
+  const engravingSlots = useMemo(() => {
+    return ArmoryEngraving.Engravings.map((v) => engravingParser(v));
   }, []);
 
   useEffect(() => {
     dispatch(initializeJewelries(jewelries));
     stone && dispatch(initializeStone(stone));
+    dispatch(initializeSlots(engravingSlots));
     return () => {
       dispatch(removeAll());
       dispatch(removeStone());
+      dispatch(removeSlots());
     };
   }, [dispatch]);
 

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { ReactNode, useState } from "react";
-import { Collapse, IconButton, useMediaQuery } from "@mui/material";
+import { Collapse, IconButton } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
 interface Props {
@@ -10,7 +10,7 @@ interface Props {
 
 export default function BoardItemWrapper(props: Props) {
   const { children } = props;
-  const [show, setShow] = useState(useMediaQuery("(min-width:600px)"));
+  const [show, setShow] = useState(false);
 
   return (
     <>
