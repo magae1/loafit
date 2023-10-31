@@ -17,11 +17,11 @@ export default function EngravingFittings() {
       <Grid item xs={12} sm={6}>
         <List>
           <ListSectionWrapper label={"각인서"}>
-            <Grid container spacing={2} px={3} pt={2}>
-              <Grid item xs={12} sm>
+            <Grid container spacing={2} pl={4} py={1}>
+              <Grid item xs={12}>
                 <EngravingSlider index={0} />
               </Grid>
-              <Grid item xs={12} sm>
+              <Grid item xs={12}>
                 <EngravingSlider index={1} />
               </Grid>
             </Grid>

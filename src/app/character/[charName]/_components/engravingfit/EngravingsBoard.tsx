@@ -1,19 +1,10 @@
 "use client";
-import {
-  List,
-  Divider,
-  Grid,
-  ListItem,
-  ListItemText,
-  Typography,
-  Box,
-  Stack,
-} from "@mui/material";
+import { useMemo } from "react";
+import { Divider, Grid, Typography, Box, Stack } from "@mui/material";
 import _ from "underscore";
 
 import { useAppSelector } from "@/redux/store";
 import { TActiveEngraving } from "@/libs/types";
-import { useMemo } from "react";
 
 function EngravingEffect({
   name,
@@ -31,12 +22,12 @@ function EngravingEffect({
         sx={{
           textDecoration: level <= 0 ? "line-through" : undefined,
           fontWeight: Math.max(100, level * 300),
+          lineHeight: 1,
         }}
       >
         {name} Lv.{level}
       </Typography>
-
-      <Typography variant={"caption"}>
+      <Typography variant={"body2"} gutterBottom>
         {data.map((v) => v.Value).join("+")} = {sum}
       </Typography>
     </Box>

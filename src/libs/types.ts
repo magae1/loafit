@@ -9,6 +9,16 @@ export enum ITEM_OPTION_TYPES {
   GEM_SKILL_DAMAGE_IDENTITY = "GEM_SKILL_DAMAGE_IDENTITY",
   BRACELET_RANDOM_SLOT = "BRACELET_RANDOM_SLOT",
 }
+
+export enum AUCTION_SORT_TYPES {
+  BIDSTART_PRICE = "BIDSTART_PRICE",
+  BUY_PRICE = "BUY_PRICE",
+  EXPIREDATE = "EXPIREDATE",
+  ITEM_GRADE = "ITEM_GRADE",
+  ITEM_LEVEL = "ITEM_LEVEL",
+  ITEM_QUALITY = "ITEM_QUALITY",
+}
+
 export enum JEWELRY_TYPES {
   NECKLACE = "목걸이",
   EARRING = "귀걸이",
@@ -232,8 +242,62 @@ export type wearingType = {
   bracelet: TJewelry;
 };
 
-export type optionType = {
+export type TEtcSub = {
   Value: number;
   Text: string;
   Class: string;
+};
+
+export type TEtcOption = {
+  Value: number;
+  Text: string;
+  EtcSubs: TEtcSub[];
+};
+
+export type TCategoryItem = {
+  Code: number;
+  CodeName: string;
+};
+
+export type TCategory = {
+  Subs: TCategoryItem[];
+  Code: number;
+  CodeName: string;
+};
+
+export type TTripod = {
+  Value: number;
+  Text: string;
+  IsGem: boolean;
+};
+
+export type TSkillOption = {
+  Value: number;
+  Class: string;
+  Text: string;
+  IsSkillGroup: boolean;
+  Tripods: TTripod[];
+};
+
+export type TSearchDetailOption = {
+  FirstOption: number | null;
+  SecondOption: number | null;
+  MinValue: number | null;
+  MaxValue: number | null;
+};
+
+export type TRequestAuctionItems = {
+  ItemLevelMin: number;
+  ItemLevelMax: number;
+  ItemGradeQuality: number | null;
+  SkillOptions: TSearchDetailOption[];
+  EtcOptions: TSearchDetailOption[];
+  Sort: AUCTION_SORT_TYPES;
+  CategoryCode: number;
+  CharacterClass: string;
+  ItemTier: number | null;
+  ItemGrade: string;
+  ItemName: string;
+  PageNo: number;
+  SortCondition: "ASC" | "DESC";
 };

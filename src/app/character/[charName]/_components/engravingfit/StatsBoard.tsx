@@ -2,14 +2,11 @@
 import { useMemo, useRef } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import _ from "underscore";
-import { animated } from "@react-spring/web";
 
 import { useAppSelector } from "@/redux/store";
 import { TActiveStat } from "@/libs/types";
 
 const STAT_TYPES = ["치명", "특화", "제압", "신속", "인내", "숙련"];
-
-const AnimateTypo = animated(Typography);
 
 function StatItem({ name, value }: { name: string; value: number }) {
   return (
@@ -33,7 +30,8 @@ export default function StatsBoard() {
 
   const currentStats = useMemo(() => {
     return _.chain(jewelries)
-      .map((v, key): TActiveStat[] => {
+      .filter((v) => !_.isNull(v.item))
+      .map((v): TActiveStat[] => {
         return v.stats;
       })
       .flatten()

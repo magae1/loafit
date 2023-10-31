@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/redux/store";
 import { changeName, changeValue } from "@/redux/features/engravingSlotsSlice";
-import { optionType } from "@/libs/types";
+import { TEtcSub } from "@/libs/types";
 import { engravingOptions } from "@/libs/data";
 
 export default function EngravingSlider({ index }: { index: number }) {
@@ -23,7 +23,7 @@ export default function EngravingSlider({ index }: { index: number }) {
     (state) => state.engravingSlots.value[index],
   );
   const [inputValue, setInputValue] = useState("");
-  const [value, setValue] = useState<optionType | null>(null);
+  const [value, setValue] = useState<TEtcSub | null>(null);
 
   if (!engravingEffects.Effect) {
     return <Typography>장착 중인 각인 효과가 없습니다.</Typography>;
@@ -37,7 +37,7 @@ export default function EngravingSlider({ index }: { index: number }) {
   }, [engravingEffects]);
 
   return (
-    <Grid container spacing={1} p={1}>
+    <Grid container spacing={1}>
       <Grid item xs>
         <Autocomplete
           fullWidth
@@ -58,7 +58,7 @@ export default function EngravingSlider({ index }: { index: number }) {
           groupBy={(option) => option.Class}
           options={engravingOptions.sort((a, b) => {
             if (a.Class == b.Class) {
-              return a.Text > b.Text ? 1 : -1;
+              return a.Value - b.Value;
             }
             return a.Class > b.Class ? 1 : -1;
           })}

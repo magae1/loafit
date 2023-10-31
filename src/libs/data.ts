@@ -1,6 +1,6 @@
-import { optionType } from "@/libs/types";
+import { TEtcSub } from "@/libs/types";
 
-export const engravingOptions: optionType[] = [
+export const engravingOptions: TEtcSub[] = [
   {
     Value: 118,
     Text: "원한",
