@@ -16,7 +16,6 @@ import { removeOne, restoreOne } from "@/redux/features/jewelriesSlice";
 import EmptyJewelryListItem from "@/components/EmptyJewelryListItem";
 import OptionChip from "@/components/OptionChip";
 import AuctionItemAvatar from "@/components/AuctionItemAvatar";
-import { openAuction } from "@/redux/features/auctionSlice";
 
 interface Props {
   type: keyof wearingType;
@@ -39,9 +38,6 @@ export default function JewelryListItem(props: Props) {
         codeName={currJewelry.codeName}
         onRestore={() => {
           dispatch(restoreOne(type));
-        }}
-        onAdd={() => {
-          dispatch(openAuction());
         }}
       />
     );

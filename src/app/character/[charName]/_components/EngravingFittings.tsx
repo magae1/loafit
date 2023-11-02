@@ -12,11 +12,11 @@ export default function EngravingFittings() {
   return (
     <>
       <Grid container>
-        <Grid item xs={12} sm={"auto"}>
+        <Grid item xs={12} md={"auto"}>
           <StatsBoard />
           <EngravingBoard />
         </Grid>
-        <Grid item xs={12} sm>
+        <Grid item xs={12} md>
           <ListSectionWrapper label={"장신구"}>
             <List disablePadding>
               <JewelryListItem type={"necklace"} />

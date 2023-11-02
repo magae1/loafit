@@ -288,7 +288,7 @@ export type TAuctionOption = {
 };
 
 export type TSearchDetailOption = {
-  FirstOption: number | null;
+  FirstOption: number;
   SecondOption: number | null;
   MinValue: number | null;
   MaxValue: number | null;
@@ -303,7 +303,7 @@ export type TRequestAuctionItems = {
   Sort: AUCTION_SORT_TYPES;
   CategoryCode: number | null;
   CharacterClass: string | null;
-  ItemTier: number | null;
+  ItemTier: number;
   ItemGrade: string | null;
   ItemName: string | null;
   PageNo: number;

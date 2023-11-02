@@ -77,7 +77,7 @@ export default function EngravingBoard() {
 
   return (
     <Grid container spacing={{ xs: 1, sm: 3 }} py={1}>
-      <Grid item xs sm={12}>
+      <Grid item xs sm md={12}>
         <Stack>
           <CustomLabel sx={{ borderColor: theme.palette.info.main }}>
             각인 효과
@@ -105,7 +105,7 @@ export default function EngravingBoard() {
         orientation={matches ? "horizontal" : "vertical"}
         flexItem={!matches}
       />
-      <Grid item xs sm={12}>
+      <Grid item xs sm md={12}>
         <Stack>
           <CustomLabel sx={{ borderColor: theme.palette.error.main }}>
             감소 효과

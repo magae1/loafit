@@ -1,9 +1,8 @@
 "use client";
 import {
-  Box,
+  Autocomplete,
   Dialog,
-  DialogContent,
-  DialogContentText,
+  DialogActions,
   DialogTitle,
   IconButton,
   Table,
@@ -11,6 +10,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  TextField,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -18,8 +18,8 @@ import { Close } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/redux/store";
-import { closeAuction } from "@/redux/features/auctionSlice";
-import AuctionSearchInputs from "@/components/AuctionSearchInputs";
+import { changeItemTier, closeAuction } from "@/redux/features/auctionSlice";
+import { auctionOptions } from "@/libs/data";
 
 export default function AuctionDialog() {
   const theme = useTheme();
@@ -36,7 +36,7 @@ export default function AuctionDialog() {
       fullWidth={matches}
       fullScreen={!matches}
       maxWidth={"md"}
-      aria-labelledby={"경매장 검색 모달"}
+      aria-labelledby={"경매장 검색 결과 모달"}
     >
       <IconButton
         aria-label={"닫기"}
@@ -52,37 +52,39 @@ export default function AuctionDialog() {
         <Close />
       </IconButton>
       <DialogTitle sx={{ py: 1 }}>경매장</DialogTitle>
-      <DialogContent>
-        <TableContainer>
-          <Table size={"small"}>
-            <TableHead>
-              <TableRow>
-                <TableCell align="center" colSpan={2}>
-                  Country
-                </TableCell>
-                <TableCell align="center" colSpan={3}>
-                  Details
-                </TableCell>
-              </TableRow>
-            </TableHead>
-          </Table>
-        </TableContainer>
-        <DialogContentText>
-          You can set my maximum width and whether to adapt or not.
-        </DialogContentText>
-        <Box
-          noValidate
-          component="form"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            m: "auto",
-            width: "fit-content",
-          }}
-        >
-          <AuctionSearchInputs />
-        </Box>
-      </DialogContent>
+      <DialogActions>
+        <Autocomplete
+          sx={{ width: "80px" }}
+          value={options.ItemTier}
+          onChange={(_, newValue) => dispatch(changeItemTier(newValue))}
+          options={auctionOptions.ItemTiers}
+          disableClearable
+          getOptionLabel={(option) => `티어 ${option}`}
+          renderInput={(params) => (
+            <TextField {...params} variant={"standard"} size={"small"} />
+          )}
+        />
+      </DialogActions>
+      <TableContainer>
+        <Table size={"small"}>
+          <TableHead>
+            <TableRow>
+              <TableCell align={"center"} colSpan={2}>
+                아이템 정보
+              </TableCell>
+              <TableCell align={"center"} colSpan={2}>
+                가격 정보
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell align="center">이름</TableCell>
+              <TableCell align="center">품질</TableCell>
+              <TableCell align="center">경매가</TableCell>
+              <TableCell align="center">즉시 구매가</TableCell>
+            </TableRow>
+          </TableHead>
+        </Table>
+      </TableContainer>
     </Dialog>
   );
 }

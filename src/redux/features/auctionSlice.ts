@@ -1,7 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   AUCTION_SORT_TYPES,
-  STONE,
   TRequestAuctionItems,
   TSearchDetailOption,
 } from "@/libs/types";
@@ -35,18 +34,18 @@ const defaultState: defaultStateType = {
 };
 
 export const auctionSlice = createSlice({
-  name: "auction-fitting",
+  name: "fitting-auction",
   initialState: defaultState,
   reducers: {
     openAuction: (
       state,
       action: PayloadAction<{
-        etcOptions: TSearchDetailOption[];
+        detailOptions: TSearchDetailOption[];
         code: number;
       }>,
     ) => {
-      const { etcOptions, code } = action.payload;
-      state.value.options.EtcOptions = etcOptions;
+      const { detailOptions, code } = action.payload;
+      state.value.options.EtcOptions = detailOptions;
       state.value.options.CategoryCode = code;
       state.value.open = true;
     },
@@ -56,9 +55,12 @@ export const auctionSlice = createSlice({
     setCharacterClass: (state, action: PayloadAction<string>) => {
       state.value.options.CharacterClass = action.payload;
     },
+    changeItemTier: (state, action: PayloadAction<number>) => {
+      state.value.options.ItemTier = action.payload;
+    },
   },
 });
 
 export default auctionSlice.reducer;
-export const { openAuction, closeAuction, setCharacterClass } =
+export const { openAuction, changeItemTier, closeAuction, setCharacterClass } =
   auctionSlice.actions;

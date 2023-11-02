@@ -19,6 +19,11 @@ export const theme = extendTheme({
         variant: "outlined",
       },
     },
+    MuiButton: {
+      defaultProps: {
+        variant: "outlined",
+      },
+    },
     MuiCard: {
       defaultProps: {
         variant: "elevation",

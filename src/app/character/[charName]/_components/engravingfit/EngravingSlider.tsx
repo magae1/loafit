@@ -16,6 +16,7 @@ import { useAppSelector } from "@/redux/store";
 import { changeName, changeValue } from "@/redux/features/engravingSlotsSlice";
 import { TEtcSub } from "@/libs/types";
 import { engravingOptions } from "@/libs/data";
+import { GroupHeader, GroupItems } from "@/components/styles";
 
 export default function EngravingSlider({ index }: { index: number }) {
   const dispatch = useDispatch();
@@ -63,6 +64,12 @@ export default function EngravingSlider({ index }: { index: number }) {
             }
             return a.Class > b.Class ? 1 : -1;
           })}
+          renderGroup={(params) => (
+            <li key={params.key}>
+              <GroupHeader>{params.group}</GroupHeader>
+              <GroupItems>{params.children}</GroupItems>
+            </li>
+          )}
           getOptionDisabled={(option) => option.Value >= 800}
           getOptionLabel={(option) => option.Text}
         />
