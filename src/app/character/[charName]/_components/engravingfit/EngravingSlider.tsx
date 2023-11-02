@@ -29,6 +29,7 @@ export default function EngravingSlider({ index }: { index: number }) {
     return <Typography>장착 중인 각인 효과가 없습니다.</Typography>;
   }
 
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     let option = engravingOptions.find(
       (v) => v.Text === engravingEffects.Effect.Name,

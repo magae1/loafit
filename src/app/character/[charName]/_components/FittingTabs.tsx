@@ -22,6 +22,7 @@ import {
   initializeSlots,
   removeSlots,
 } from "@/redux/features/engravingSlotsSlice";
+import { setCharacterClass } from "@/redux/features/auctionSlice";
 
 interface Props {
   data: TCharacterData;
@@ -39,6 +40,7 @@ function FittingTabPanel(props: {
       hidden={value !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
+      style={{ minHeight: "50vh" }}
     >
       {value === index && <Container>{children}</Container>}
     </div>
@@ -46,7 +48,7 @@ function FittingTabPanel(props: {
 }
 
 export default function Fittings(props: Props) {
-  const { ArmoryEquipment, ArmoryEngraving } = props.data;
+  const { ArmoryEquipment, ArmoryEngraving, ArmoryProfile } = props.data;
   const params = useParams();
   const dispatch = useDispatch();
   const [value, setValue] = useState(0);
@@ -78,6 +80,7 @@ export default function Fittings(props: Props) {
     dispatch(initializeJewelries(jewelries));
     stone && dispatch(initializeStone(stone));
     dispatch(initializeSlots(engravingSlots));
+    dispatch(setCharacterClass(ArmoryProfile.CharacterClassName));
     return () => {
       dispatch(removeAll());
       dispatch(removeStone());

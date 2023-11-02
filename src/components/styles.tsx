@@ -1,5 +1,6 @@
 "use client";
-import { styled, Box } from "@mui/material";
+import { styled, Box, TextField } from "@mui/material";
+import { grey } from "@mui/material/colors";
 
 export const CustomScrollBarBox = styled(Box)`
   overflow-x: scroll;
@@ -25,5 +26,21 @@ export const ResponsivePaddingWrapper = styled("div")(({ theme }) => ({
   [theme.breakpoints.up("lg")]: {
     paddingLeft: theme.spacing(30),
     paddingRight: theme.spacing(30),
+  },
+}));
+
+export const CustomLabel = styled("label")(({ theme }) => ({
+  display: "inline-block",
+  backgroundColor: theme.palette.divider,
+  marginBottom: theme.spacing(1),
+  paddingLeft: theme.spacing(0.5),
+  width: "100%",
+  fontSize: "0.8em",
+  borderLeft: "8px solid",
+}));
+
+export const AuctionOptionInput = styled(TextField)(({ theme }) => ({
+  "& .MuiInputBase-root": {
+    padding: "0",
   },
 }));

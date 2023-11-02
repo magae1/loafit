@@ -3,14 +3,22 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { TAuctionItem, STONE, TStone } from "@/libs/types";
 
 type stateType = {
-  value: TStone;
+  value: {
+    curr: TStone;
+    prev: TStone;
+  };
+};
+
+const basicState = {
+  engravings: [],
+  codeName: STONE,
+  item: null,
 };
 
 const defaultState: stateType = {
   value: {
-    engravings: [],
-    codeName: STONE,
-    item: null,
+    curr: basicState,
+    prev: basicState,
   },
 };
 
@@ -19,37 +27,37 @@ export const abilityStone = createSlice({
   initialState: defaultState,
   reducers: {
     initializeStone: (state, action: PayloadAction<TStone>) => {
-      state.value = action.payload;
-    },
-    changeStone: (state, action: PayloadAction<TAuctionItem>) => {
-      state.value.engravings = action.payload.Options.map((v) => ({
-        Name: v.OptionName,
-        Value: 0,
-        IsPenalty: v.IsPenalty,
-      }));
-      state.value.item = action.payload;
+      state.value.curr = action.payload;
     },
     changeEngValue: (
       state,
       action: PayloadAction<{ index: number; value: number | null }>,
     ) => {
       const { index, value } = action.payload;
-      if (index < 0 || index >= state.value.engravings.length) return;
+      if (index < 0 || index >= state.value.curr.engravings.length) return;
       if (!value) {
-        state.value.engravings[index].Value = 0;
+        state.value.curr.engravings[index].Value = 0;
         return;
       }
       if (value && value >= 0 && value <= 10) {
-        state.value.engravings[index].Value = value;
+        state.value.curr.engravings[index].Value = value;
       }
     },
+    restoreStone: (state) => {
+      state.value.curr.item = state.value.prev.item;
+      state.value.curr.engravings = state.value.prev.engravings;
+      state.value.prev.engravings = [];
+      state.value.prev.item = null;
+    },
     removeStone: (state) => {
-      state.value.engravings = [];
-      state.value.item = null;
+      state.value.prev.item = state.value.curr.item;
+      state.value.prev.engravings = state.value.curr.engravings;
+      state.value.curr.engravings = [];
+      state.value.curr.item = null;
     },
   },
 });
 
 export default abilityStone.reducer;
-export const { initializeStone, changeStone, changeEngValue, removeStone } =
+export const { initializeStone, changeEngValue, restoreStone, removeStone } =
   abilityStone.actions;

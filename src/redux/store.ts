@@ -5,6 +5,7 @@ import jewelriesReducer from "@/redux/features/jewelriesSlice";
 import characterSearchReducer from "@/redux/features/characterSearchSlice";
 import abilityStoneReducer from "@/redux/features/stoneSlice";
 import engravingSlotsReducer from "@/redux/features/engravingSlotsSlice";
+import auctionReducer from "@/redux/features/auctionSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     characterSearch: characterSearchReducer,
     abilityStone: abilityStoneReducer,
     engravingSlots: engravingSlotsReducer,
+    auction: auctionReducer,
   },
 });
 

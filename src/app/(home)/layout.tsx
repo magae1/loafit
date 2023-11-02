@@ -10,7 +10,7 @@ interface Props {
 export default function Layout(props: Props) {
   const { children, engraving, notice } = props;
   return (
-    <Container maxWidth={"lg"}>
+    <Container maxWidth={"lg"} sx={{ minHeight: "100vh" }}>
       <Stack divider={<Divider />} spacing={2}>
         {children}
       </Stack>

@@ -19,38 +19,26 @@ const basicValue = {
   necklace: {
     codeName: JEWELRY_TYPES.NECKLACE,
     item: null,
-    stats: [],
-    engravings: [],
   },
   earring1: {
     codeName: JEWELRY_TYPES.EARRING,
     item: null,
-    stats: [],
-    engravings: [],
   },
   earring2: {
     codeName: JEWELRY_TYPES.EARRING,
     item: null,
-    stats: [],
-    engravings: [],
   },
   ring1: {
     codeName: JEWELRY_TYPES.RING,
     item: null,
-    stats: [],
-    engravings: [],
   },
   ring2: {
     codeName: JEWELRY_TYPES.RING,
     item: null,
-    stats: [],
-    engravings: [],
   },
   bracelet: {
     codeName: JEWELRY_TYPES.BRACELET,
     item: null,
-    stats: [],
-    engravings: [],
   },
 };
 
@@ -86,8 +74,6 @@ export const jewelries = createSlice({
       state.value.prev[type] = {
         codeName: state.value.curr[type].codeName,
         item: state.value.curr[type].item,
-        stats: state.value.curr[type].stats,
-        engravings: state.value.curr[type].engravings,
       };
       state.value.curr[type] = basicValue[type];
     },

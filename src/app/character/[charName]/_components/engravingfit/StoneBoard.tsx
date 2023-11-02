@@ -1,5 +1,4 @@
 "use client";
-import Image from "next/image";
 import { SyntheticEvent, useMemo } from "react";
 import {
   List,
@@ -8,18 +7,26 @@ import {
   Rating,
   Typography,
   ListItemText,
-  Avatar,
-  ListItemAvatar,
+  IconButton,
 } from "@mui/material";
-import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
+import {
+  RadioButtonChecked,
+  RadioButtonUnchecked,
+  RemoveCircle,
+} from "@mui/icons-material";
 import { red, blue } from "@mui/material/colors";
 import _ from "underscore";
 import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/redux/store";
 import { TActiveEngraving } from "@/libs/types";
-import { changeEngValue, removeStone } from "@/redux/features/stoneSlice";
-import FittingListItem from "@/components/FittingListItem";
+import {
+  changeEngValue,
+  removeStone,
+  restoreStone,
+} from "@/redux/features/stoneSlice";
+import EmptyJewelryListItem from "@/components/EmptyJewelryListItem";
+import AuctionItemAvatar from "@/components/AuctionItemAvatar";
 
 interface Props {
   option: TActiveEngraving;
@@ -60,14 +67,14 @@ function EngravingOptionItem(props: Props) {
 }
 
 export default function StoneBoard() {
-  const stone = useAppSelector((state) => state.abilityStone.value);
+  const { curr, prev } = useAppSelector((state) => state.abilityStone.value);
   const dispatch = useDispatch();
 
   const StoneStates = useMemo(() => {
-    if (_.isEmpty(stone)) {
+    if (_.isEmpty(curr)) {
       return null;
     }
-    return stone.engravings.map((v, i) => (
+    return curr.engravings.map((v, i) => (
       <EngravingOptionItem
         key={_.uniqueId("stone-engraving-rate-item")}
         option={v}
@@ -76,40 +83,35 @@ export default function StoneBoard() {
         }}
       />
     ));
-  }, [stone, dispatch]);
+  }, [curr, dispatch]);
 
   return (
-    <List>
-      <FittingListItem
-        is_none={stone.item ? null : "y"}
-        onClick={() => {
-          dispatch(removeStone());
-        }}
-        sx={{ minHeight: "68px" }}
-      >
-        <ListItemAvatar>
-          <Avatar>
-            {stone.item ? (
-              <Image
-                fill
-                unoptimized
-                src={stone.item.Icon}
-                alt={`${stone.item.Name} 아이콘`}
-              />
-            ) : (
-              "돌"
-            )}
-          </Avatar>
-        </ListItemAvatar>
-        <ListItemText
-          primary={
-            stone.item ? `[${stone.item.Grade}] ${stone.item.Name}` : undefined
+    <List disablePadding>
+      {curr.item ? (
+        <ListItem
+          secondaryAction={
+            <IconButton
+              edge={"end"}
+              onClick={() => {
+                dispatch(removeStone());
+              }}
+            >
+              <RemoveCircle />
+            </IconButton>
           }
-          secondary={
-            stone.item ? undefined : "장착 중인 어빌리티 스톤이 없습니다."
-          }
+        >
+          <AuctionItemAvatar item={curr.item} />
+          <ListItemText primary={`[${curr.item.Grade}] ${curr.item.Name}`} />
+        </ListItem>
+      ) : (
+        <EmptyJewelryListItem
+          prev_item={prev.item}
+          codeName={curr.codeName}
+          onRestore={() => {
+            dispatch(restoreStone());
+          }}
         />
-      </FittingListItem>
+      )}
       <List dense>{StoneStates}</List>
     </List>
   );

@@ -178,10 +178,7 @@ export type TFittingItem = {
   item: TAuctionItem | null;
 };
 
-export interface TJewelry extends TFittingItem {
-  stats: TActiveStat[];
-  engravings: TActiveEngraving[];
-}
+export interface TJewelry extends TFittingItem {}
 
 export interface TStone extends TFittingItem {
   engravings: TActiveEngraving[];
@@ -279,6 +276,17 @@ export type TSkillOption = {
   Tripods: TTripod[];
 };
 
+export type TAuctionOption = {
+  MaxItemLevel: number;
+  ItemGradeQualities: number[];
+  SkillOptions: TSkillOption[];
+  EtcOptions: TEtcOption[];
+  Categories: TCategory[];
+  ItemGrades: string[];
+  ItemTiers: number[];
+  Classes: string[];
+};
+
 export type TSearchDetailOption = {
   FirstOption: number | null;
   SecondOption: number | null;
@@ -293,11 +301,11 @@ export type TRequestAuctionItems = {
   SkillOptions: TSearchDetailOption[];
   EtcOptions: TSearchDetailOption[];
   Sort: AUCTION_SORT_TYPES;
-  CategoryCode: number;
-  CharacterClass: string;
+  CategoryCode: number | null;
+  CharacterClass: string | null;
   ItemTier: number | null;
-  ItemGrade: string;
-  ItemName: string;
+  ItemGrade: string | null;
+  ItemName: string | null;
   PageNo: number;
   SortCondition: "ASC" | "DESC";
 };

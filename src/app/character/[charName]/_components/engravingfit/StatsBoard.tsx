@@ -4,7 +4,8 @@ import { Box, Stack, Typography } from "@mui/material";
 import _ from "underscore";
 
 import { useAppSelector } from "@/redux/store";
-import { TActiveStat } from "@/libs/types";
+import { TActiveStat, TItemOption } from "@/libs/types";
+import { CustomLabel } from "@/components/styles";
 
 const STAT_TYPES = ["치명", "특화", "제압", "신속", "인내", "숙련"];
 
@@ -30,12 +31,10 @@ export default function StatsBoard() {
 
   const currentStats = useMemo(() => {
     return _.chain(jewelries)
-      .filter((v) => !_.isNull(v.item))
-      .map((v): TActiveStat[] => {
-        return v.stats;
-      })
+      .map((v): TItemOption[] => (v.item ? v.item.Options : []))
       .flatten()
-      .filter((v) => _.contains(STAT_TYPES, v.Name))
+      .filter((v) => _.contains(STAT_TYPES, v.OptionName))
+      .map((v) => ({ Name: v.OptionName, Value: v.Value }))
       .groupBy((v) => v.Name)
       .mapObject((v, k) => {
         return _.reduce(v, (prev, curr) => curr.Value + prev, 0);
@@ -45,19 +44,24 @@ export default function StatsBoard() {
   }, [jewelries]);
 
   return (
-    <Stack
-      my={2}
-      direction={"row"}
-      flexWrap={"wrap"}
-      justifyContent={"space-evenly"}
-    >
-      {_.chain(currentStats)
-        .pairs()
-        .map((v) => {
-          const [a, b] = v;
-          return <StatItem key={_.uniqueId("stat-item")} name={a} value={b} />;
-        })
-        .value()}
-    </Stack>
+    <div>
+      <CustomLabel>전투 특성</CustomLabel>
+      <Stack
+        mb={1}
+        direction={"row"}
+        flexWrap={"wrap"}
+        justifyContent={"space-evenly"}
+      >
+        {_.chain(currentStats)
+          .pairs()
+          .map((v) => {
+            const [a, b] = v;
+            return (
+              <StatItem key={_.uniqueId("stat-item")} name={a} value={b} />
+            );
+          })
+          .value()}
+      </Stack>
+    </div>
   );
 }

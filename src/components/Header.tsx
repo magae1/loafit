@@ -5,14 +5,17 @@ import {
   Container,
   Typography,
   Toolbar,
-  Box,
+  Stack,
 } from "@mui/material";
 
 export default function Header() {
   return (
     <AppBar position={"static"}>
       <Container maxWidth={"lg"} disableGutters>
-        <Toolbar variant={"dense"}>
+        <Toolbar
+          variant={"dense"}
+          sx={{ flexGrow: 1, justifyContent: "space-between" }}
+        >
           <MuiLink component={Link} href={"/"} sx={{ textDecoration: "none" }}>
             <Typography
               color={"primary.contrastText"}
@@ -31,7 +34,6 @@ export default function Header() {
               LOA-FIT
             </Typography>
           </MuiLink>
-          <Box sx={{ flexGrow: 1 }}></Box>
         </Toolbar>
       </Container>
     </AppBar>

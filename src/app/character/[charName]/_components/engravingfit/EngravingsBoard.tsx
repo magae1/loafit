@@ -1,10 +1,19 @@
 "use client";
 import { useMemo } from "react";
-import { Divider, Grid, Typography, Box, Stack } from "@mui/material";
+import {
+  Divider,
+  Grid,
+  Typography,
+  Box,
+  Stack,
+  useTheme,
+  useMediaQuery,
+} from "@mui/material";
 import _ from "underscore";
 
 import { useAppSelector } from "@/redux/store";
-import { TActiveEngraving } from "@/libs/types";
+import { ITEM_OPTION_TYPES, TActiveEngraving } from "@/libs/types";
+import { CustomLabel } from "@/components/styles";
 
 function EngravingEffect({
   name,
@@ -17,7 +26,7 @@ function EngravingEffect({
 }) {
   const level = Math.min(3, Math.floor(sum / 5));
   return (
-    <Box>
+    <Box ml={1}>
       <Typography
         sx={{
           textDecoration: level <= 0 ? "line-through" : undefined,
@@ -35,16 +44,24 @@ function EngravingEffect({
 }
 
 export default function EngravingBoard() {
+  const theme = useTheme();
+  const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const jewelries = useAppSelector((state) => state.jewelries.value.curr);
   const stoneEngravings = useAppSelector(
-    (state) => state.abilityStone.value.engravings,
+    (state) => state.abilityStone.value.curr.engravings,
   );
   const engravingSlots = useAppSelector((state) => state.engravingSlots.value);
 
   const totalEngravings = useMemo(() => {
     const jewelryEngravings: TActiveEngraving[] = _.chain(jewelries)
-      .map((v): TActiveEngraving[] => v.engravings)
+      .map((v) => (v.item ? v.item.Options : []))
       .flatten()
+      .filter((v) => v.Type === ITEM_OPTION_TYPES.ABILITY_ENGRAVE)
+      .map((v) => ({
+        Name: v.OptionName,
+        Value: v.Value,
+        IsPenalty: v.IsPenalty,
+      }))
       .value();
 
     const slotEngravings: TActiveEngraving[] = _.chain(engravingSlots)
@@ -60,8 +77,11 @@ export default function EngravingBoard() {
 
   return (
     <Grid container spacing={{ xs: 1, sm: 3 }} py={1}>
-      <Grid item xs>
+      <Grid item xs sm={12}>
         <Stack>
+          <CustomLabel sx={{ borderColor: theme.palette.info.main }}>
+            각인 효과
+          </CustomLabel>
           {_.chain(totalEngravings[1])
             .groupBy((v) => v.Name)
             .mapObject((v, k) => {
@@ -81,9 +101,15 @@ export default function EngravingBoard() {
             .value()}
         </Stack>
       </Grid>
-      <Divider orientation={"vertical"} flexItem />
-      <Grid item xs>
+      <Divider
+        orientation={matches ? "horizontal" : "vertical"}
+        flexItem={!matches}
+      />
+      <Grid item xs sm={12}>
         <Stack>
+          <CustomLabel sx={{ borderColor: theme.palette.error.main }}>
+            감소 효과
+          </CustomLabel>
           {_.chain(totalEngravings[0])
             .groupBy((v) => v.Name)
             .mapObject((v, k) => {
