@@ -176,6 +176,7 @@ export type TActiveEngraving = {
 export type TFittingItem = {
   codeName: string;
   item: TAuctionItem | null;
+  updatedAt?: Date;
 };
 
 export interface TJewelry extends TFittingItem {}
@@ -308,4 +309,11 @@ export type TRequestAuctionItems = {
   ItemName: string | null;
   PageNo: number;
   SortCondition: "ASC" | "DESC";
+};
+
+export type TAuction = {
+  PageNo: number;
+  PageSize: number;
+  TotalCount: number;
+  Items: TAuctionItem[] | null;
 };

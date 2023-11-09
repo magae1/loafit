@@ -15,6 +15,7 @@ import {
   styled,
   TextField,
 } from "@mui/material";
+import { red } from "@mui/material/colors";
 import { Delete } from "@mui/icons-material";
 
 import { TEtcSub, TSearchDetailOption } from "@/libs/types";
@@ -69,11 +70,7 @@ export default function SecondOptionInputs(props: Props) {
   return (
     <Grid container item columnSpacing={1}>
       <Grid container item xs={"auto"}>
-        <Button
-          variant={"contained"}
-          color={"warning"}
-          onClick={onDeleteOption}
-        >
+        <Button variant={"contained"} color={"error"} onClick={onDeleteOption}>
           <Delete fontSize={"small"} />
         </Button>
       </Grid>
@@ -114,10 +111,11 @@ export default function SecondOptionInputs(props: Props) {
               if (
                 numValue < 0 ||
                 (detailOption.MaxValue && detailOption.MaxValue < numValue)
-              )
+              ) {
                 return;
+              }
               setOptions((prevState) => {
-                const state = [...prevState];
+                let state = [...prevState];
                 state[index].MinValue = numValue;
                 return state;
               });
@@ -135,11 +133,10 @@ export default function SecondOptionInputs(props: Props) {
                 numValue < 0 ||
                 (detailOption.MinValue && detailOption.MinValue > numValue)
               ) {
-                console.log(numValue);
                 return;
               }
               setOptions((prevState) => {
-                const state = [...prevState];
+                let state = [...prevState];
                 state[index].MaxValue = numValue;
                 return state;
               });

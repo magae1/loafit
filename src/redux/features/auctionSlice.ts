@@ -37,30 +37,42 @@ export const auctionSlice = createSlice({
   name: "fitting-auction",
   initialState: defaultState,
   reducers: {
-    openAuction: (
-      state,
-      action: PayloadAction<{
-        detailOptions: TSearchDetailOption[];
-        code: number;
-      }>,
-    ) => {
-      const { detailOptions, code } = action.payload;
-      state.value.options.EtcOptions = detailOptions;
-      state.value.options.CategoryCode = code;
+    openAuction: (state, action: PayloadAction<number>) => {
+      state.value.options.CategoryCode = action.payload;
       state.value.open = true;
     },
     closeAuction: (state) => {
       state.value.open = false;
     },
     setCharacterClass: (state, action: PayloadAction<string>) => {
+      state.value.options.PageNo = 1;
       state.value.options.CharacterClass = action.payload;
     },
     changeItemTier: (state, action: PayloadAction<number>) => {
+      state.value.options.PageNo = 1;
       state.value.options.ItemTier = action.payload;
+    },
+    changeItemGradeQuality: (state, action: PayloadAction<number | null>) => {
+      state.value.options.PageNo = 1;
+      state.value.options.ItemGradeQuality = action.payload;
+    },
+    changeItemGrade: (state, action: PayloadAction<string | null>) => {
+      state.value.options.PageNo = 1;
+      state.value.options.ItemGrade = action.payload;
+    },
+    changePageNo: (state, action: PayloadAction<number>) => {
+      state.value.options.PageNo = action.payload;
     },
   },
 });
 
 export default auctionSlice.reducer;
-export const { openAuction, changeItemTier, closeAuction, setCharacterClass } =
-  auctionSlice.actions;
+export const {
+  openAuction,
+  changeItemGradeQuality,
+  changeItemTier,
+  closeAuction,
+  setCharacterClass,
+  changeItemGrade,
+  changePageNo,
+} = auctionSlice.actions;

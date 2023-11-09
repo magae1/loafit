@@ -4,7 +4,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import _ from "underscore";
 
 import { useAppSelector } from "@/redux/store";
-import { TActiveStat, TItemOption } from "@/libs/types";
+import { TItemOption } from "@/libs/types";
 import { CustomLabel } from "@/components/styles";
 
 const STAT_TYPES = ["치명", "특화", "제압", "신속", "인내", "숙련"];
@@ -45,7 +45,9 @@ export default function StatsBoard() {
 
   return (
     <div>
-      <CustomLabel>전투 특성</CustomLabel>
+      <CustomLabel>
+        전투 특성 [합: {_.reduce(currentStats, (prev, stat) => prev + stat, 0)}]
+      </CustomLabel>
       <Stack
         mb={1}
         direction={"row"}

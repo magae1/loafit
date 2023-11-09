@@ -1,16 +1,12 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, CircularProgressProps } from "@mui/material";
 import _ from "underscore";
 
-const QUALITY_COLORS = [
-  { minValue: 100, color: "#fe9600" },
-  { minValue: 90, color: "#ce43fc" },
-  { minValue: 70, color: "#00b5ff" },
-  { minValue: 30, color: "#91fe02" },
-  { minValue: 10, color: "#ffd200" },
-  { minValue: 0, color: "#ff6000" },
-];
+import { QUALITY_COLORS } from "@/libs/data";
 
-export default function QualityLabel({ value }: { value: number }) {
+export default function QualityLabel(
+  props: CircularProgressProps & { value: number },
+) {
+  const { value, size } = props;
   if (value < 0) return null;
 
   const qualityColor = _.chain(QUALITY_COLORS)
@@ -22,7 +18,7 @@ export default function QualityLabel({ value }: { value: number }) {
       <CircularProgress
         variant={"determinate"}
         sx={{ color: qualityColor }}
-        size={50}
+        size={size}
         value={value}
       />
       <Box

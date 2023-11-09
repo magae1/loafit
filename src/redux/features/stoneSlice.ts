@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { TAuctionItem, STONE, TStone } from "@/libs/types";
+import { optionToEngraving } from "@/libs/transformers";
 
 type stateType = {
   value: {
@@ -28,6 +29,17 @@ export const abilityStone = createSlice({
   reducers: {
     initializeStone: (state, action: PayloadAction<TStone>) => {
       state.value.curr = action.payload;
+    },
+    addStone: (state, action: PayloadAction<TAuctionItem>) => {
+      state.value.prev.item = state.value.curr.item;
+      state.value.prev.engravings = state.value.curr.engravings;
+      state.value.prev.updatedAt = state.value.curr.updatedAt;
+
+      state.value.curr.item = action.payload;
+      state.value.curr.engravings = action.payload.Options.map((opt) =>
+        optionToEngraving(opt),
+      );
+      state.value.curr.updatedAt = new Date();
     },
     changeEngValue: (
       state,

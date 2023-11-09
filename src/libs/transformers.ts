@@ -1,5 +1,5 @@
 import _ from "underscore";
-import { HTMLElement, parse } from "node-html-parser";
+import { parse } from "node-html-parser";
 
 import {
   TArmoryEquipment,
@@ -152,7 +152,7 @@ const equipmentParser = (equipment: TArmoryEquipment): TFittingItem => {
   };
 };
 
-const optionToEngraving = (option: TItemOption): TActiveEngraving => {
+export const optionToEngraving = (option: TItemOption): TActiveEngraving => {
   return {
     Name: option.OptionName,
     Value: option.Value,
@@ -179,20 +179,9 @@ export const stoneParser = (equipment: TArmoryEquipment): TStone => {
 
 export const jewelryParser = (equipment: TArmoryEquipment): TJewelry => {
   const data = equipmentParser(equipment);
-
-  const engravings = data.item?.Options.filter(
-    (v) => v.Type === ITEM_OPTION_TYPES.ABILITY_ENGRAVE,
-  ).map((v) => optionToEngraving(v));
-
-  const stats = data.item?.Options.filter(
-    (v) => v.Type === ITEM_OPTION_TYPES.STAT,
-  ).map((v) => optionToStat(v));
-
   return {
     codeName: data.codeName,
     item: data.item,
-    stats: stats ? stats : [],
-    engravings: engravings ? engravings : [],
   };
 };
 

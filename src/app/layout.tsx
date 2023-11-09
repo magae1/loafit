@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Metadata } from "next";
 import dayjs from "dayjs";
 const relativeTime = require("dayjs/plugin/relativeTime");
 import "dayjs/locale/ko";
@@ -9,7 +10,6 @@ import ThemeRegistry from "@/components/ThemeRegistry";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReduxProvider from "@/redux/ReduxProvider";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "로아핏",

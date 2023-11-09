@@ -68,6 +68,7 @@ export const jewelries = createSlice({
       state.value.prev[action.payload.type] =
         state.value.curr[action.payload.type];
       state.value.curr[action.payload.type].item = action.payload.item;
+      state.value.curr[action.payload.type].updatedAt = new Date();
     },
     removeOne: (state, action: PayloadAction<keyof wearingType>) => {
       const type = action.payload;

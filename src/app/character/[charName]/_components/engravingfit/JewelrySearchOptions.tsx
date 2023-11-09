@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import _ from "underscore";
 
 import { auctionOptions } from "@/libs/data";
-import SecondOptionInputs from "@/components/SecondOptionInputs";
+import SecondOptionInputs from "./SecondOptionInputs";
 import { TCategoryItem, TEtcOption, TSearchDetailOption } from "@/libs/types";
 import { openAuction } from "@/redux/features/auctionSlice";
 
@@ -78,9 +78,7 @@ export default function JewelrySearchOptions({
           <Button
             sx={{ height: "100%" }}
             onClick={() => {
-              dispatch(
-                openAuction({ detailOptions: detailOptions, code: code }),
-              );
+              dispatch(openAuction(code));
             }}
           >
             <CallMadeSharp />

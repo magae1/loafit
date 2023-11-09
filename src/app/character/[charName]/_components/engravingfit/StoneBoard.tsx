@@ -25,8 +25,9 @@ import {
   removeStone,
   restoreStone,
 } from "@/redux/features/stoneSlice";
-import EmptyJewelryListItem from "@/components/EmptyJewelryListItem";
+import EmptyJewelryListItem from "./EmptyJewelryListItem";
 import AuctionItemAvatar from "@/components/AuctionItemAvatar";
+import { openAuction } from "@/redux/features/auctionSlice";
 
 interface Props {
   option: TActiveEngraving;
@@ -107,6 +108,9 @@ export default function StoneBoard() {
         <EmptyJewelryListItem
           prev_item={prev.item}
           codeName={curr.codeName}
+          onOpenAuction={() => {
+            dispatch(openAuction(30000));
+          }}
           onRestore={() => {
             dispatch(restoreStone());
           }}
