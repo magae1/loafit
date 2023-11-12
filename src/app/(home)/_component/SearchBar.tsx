@@ -1,8 +1,19 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { FormEvent, useCallback, useState } from "react";
-import { FormControl, IconButton, Input, InputAdornment } from "@mui/material";
+import {
+  FormControl,
+  IconButton,
+  Input,
+  InputAdornment,
+  InputBase,
+} from "@mui/material";
 import { AccountCircle, Clear } from "@mui/icons-material";
+import {
+  NumInputAdornment,
+  StyledInput,
+  StyledInputRoot,
+} from "@/components/styles";
 
 interface Props {
   width?: string | number;
@@ -27,24 +38,20 @@ export default function SearchBar(props: Props) {
       component={"form"}
       onSubmit={onSubmitHandle}
     >
-      <Input
+      <InputBase
         type={"text"}
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
-        sx={{ width: width, fontSize: "1.2em", py: 1 }}
-        startAdornment={
-          <InputAdornment position={"start"}>
-            <AccountCircle fontSize={"large"} />
-          </InputAdornment>
-        }
+        sx={{ width: width, fontSize: "1.2em" }}
+        components={{ Root: StyledInputRoot, Input: StyledInput }}
         endAdornment={
-          <InputAdornment position={"end"}>
-            {inputValue && (
-              <IconButton size={"small"} onClick={() => setInputValue("")}>
+          inputValue && (
+            <InputAdornment position={"end"}>
+              <IconButton onClick={() => setInputValue("")}>
                 <Clear />
               </IconButton>
-            )}
-          </InputAdornment>
+            </InputAdornment>
+          )
         }
         placeholder={"캐릭터 이름을 입력해주세요"}
       />

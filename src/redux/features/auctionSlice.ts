@@ -1,20 +1,24 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   AUCTION_SORT_TYPES,
+  STONE,
   TRequestAuctionItems,
   TSearchDetailOption,
+  wearingType,
 } from "@/libs/types";
 
 type defaultStateType = {
   value: {
     open: boolean;
     options: TRequestAuctionItems;
+    type: keyof wearingType | typeof STONE | null;
   };
 };
 
 const defaultState: defaultStateType = {
   value: {
     open: false,
+    type: null,
     options: {
       ItemLevelMin: 0,
       ItemLevelMax: 1700,
@@ -37,8 +41,18 @@ export const auctionSlice = createSlice({
   name: "fitting-auction",
   initialState: defaultState,
   reducers: {
-    openAuction: (state, action: PayloadAction<number>) => {
-      state.value.options.CategoryCode = action.payload;
+    openAuction: (
+      state,
+      action: PayloadAction<{
+        type: keyof wearingType | typeof STONE;
+        code: number;
+        detailOptions: TSearchDetailOption[];
+      }>,
+    ) => {
+      const { type, code, detailOptions } = action.payload;
+      state.value.type = type;
+      state.value.options.CategoryCode = code;
+      state.value.options.EtcOptions = detailOptions;
       state.value.open = true;
     },
     closeAuction: (state) => {

@@ -2,18 +2,18 @@
 import { ReactNode } from "react";
 import { Experimental_CssVarsProvider as CssVarsProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import { SnackbarProvider } from "notistack";
 
 import { theme } from "@/libs/theme";
 
-const ThemeRegistry = (props: { children: ReactNode }) => {
+// @ts-ignore
+export default function ThemeProvider(props: { children: ReactNode }) {
   const { children } = props;
 
   return (
     <CssVarsProvider theme={theme}>
       <CssBaseline />
-      {children}
+      <SnackbarProvider>{children}</SnackbarProvider>
     </CssVarsProvider>
   );
-};
-
-export default ThemeRegistry;
+}

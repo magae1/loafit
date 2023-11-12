@@ -1,31 +1,36 @@
-import { FormControl, InputAdornment, OutlinedInput } from "@mui/material";
-import { ChangeEvent } from "react";
+import { ForwardedRef, forwardRef } from "react";
+import { NumberInputProps, Unstable_NumberInput } from "@mui/base";
 
-interface Props {
-  value: number;
-  onChangeValue: (e: ChangeEvent<HTMLInputElement>) => void;
-  width?: string | number;
-  simpleText?: string;
-}
+import {
+  StyledInput,
+  StyledButton,
+  StyledNumInputRoot,
+} from "@/components/styles";
 
-export default function NumberInput(props: Props) {
-  const { value, onChangeValue, simpleText, width } = props;
+const NumberInput = forwardRef(function CustomNumberInput(
+  props: NumberInputProps,
+  ref: ForwardedRef<HTMLDivElement>,
+) {
   return (
-    <FormControl sx={{ width: width }} variant={"outlined"}>
-      <OutlinedInput
-        size={"small"}
-        type={"number"}
-        value={value}
-        onChange={onChangeValue}
-        id={"outlined-number-input"}
-        startAdornment={
-          <InputAdornment position={"start"}>{simpleText}</InputAdornment>
-        }
-        inputProps={{
-          "aria-label": "number-input",
-          min: 0,
-        }}
-      />
-    </FormControl>
+    <Unstable_NumberInput
+      slots={{
+        root: StyledNumInputRoot,
+        input: StyledInput,
+        incrementButton: StyledButton,
+        decrementButton: StyledButton,
+      }}
+      slotProps={{
+        incrementButton: {
+          children: <span className="arrow">▴</span>,
+        },
+        decrementButton: {
+          children: <span className="arrow">▾</span>,
+        },
+      }}
+      {...props}
+      ref={ref}
+    />
   );
-}
+});
+
+export default NumberInput;

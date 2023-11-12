@@ -66,16 +66,24 @@ export default async function Page(props: Props) {
             >
               <BasicProfileBoard data={charData.ArmoryProfile} />
               <BoardItemWrapper>
-                <StatsBoard data={charData.ArmoryProfile.Stats} />
-                <EngravingEffectsBoard
-                  data={charData.ArmoryEngraving.Effects}
-                />
+                {charData.ArmoryProfile.Stats && (
+                  <StatsBoard data={charData.ArmoryProfile.Stats} />
+                )}
+                {charData.ArmoryEngraving && (
+                  <EngravingEffectsBoard
+                    data={charData.ArmoryEngraving?.Effects}
+                  />
+                )}
               </BoardItemWrapper>
             </Stack>
           </Grid>
         </Grid>
       </div>
-      <FittingTabs data={charData} />
+      <FittingTabs
+        profile={charData.ArmoryProfile}
+        equipments={charData.ArmoryEquipment}
+        engraving={charData.ArmoryEngraving}
+      />
     </div>
   );
 }

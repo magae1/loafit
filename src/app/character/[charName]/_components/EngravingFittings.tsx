@@ -12,7 +12,7 @@ export default function EngravingFittings() {
   return (
     <>
       <Grid container>
-        <Grid item xs={12} md={"auto"}>
+        <Grid item xs={12} md={5}>
           <StatsBoard />
           <EngravingBoard />
         </Grid>

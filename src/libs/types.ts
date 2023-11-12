@@ -50,7 +50,7 @@ export type TArmoryProfile = {
   GuildName: string;
   UsingSkillPoint: number;
   TotalSkillPoint: number;
-  Stats: TStat[];
+  Stats: TStat[] | null;
   Tendencies: TTendency[];
   ServerName: string;
   CharacterName: string;
@@ -157,9 +157,9 @@ export type TAuctionItem = {
 
 export type TCharacterData = {
   ArmoryProfile: TArmoryProfile;
-  ArmoryEquipment: TArmoryEquipment[];
-  ArmoryAvatars: TArmoryAvatar[];
-  ArmoryEngraving: TArmoryEngraving;
+  ArmoryEquipment: TArmoryEquipment[] | null;
+  ArmoryAvatars: TArmoryAvatar[] | null;
+  ArmoryEngraving: TArmoryEngraving | null;
 };
 
 export type TActiveStat = {
@@ -176,7 +176,7 @@ export type TActiveEngraving = {
 export type TFittingItem = {
   codeName: string;
   item: TAuctionItem | null;
-  updatedAt?: Date;
+  updatedAt?: number;
 };
 
 export interface TJewelry extends TFittingItem {}

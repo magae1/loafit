@@ -15,7 +15,6 @@ import {
   styled,
   TextField,
 } from "@mui/material";
-import { red } from "@mui/material/colors";
 import { Delete } from "@mui/icons-material";
 
 import { TEtcSub, TSearchDetailOption } from "@/libs/types";

@@ -1,14 +1,7 @@
 "use client";
 import { useMemo } from "react";
-import {
-  Divider,
-  Grid,
-  Typography,
-  Box,
-  Stack,
-  useTheme,
-  useMediaQuery,
-} from "@mui/material";
+import { Grid, useTheme, List, ListItem, ListItemText } from "@mui/material";
+import { orange, red } from "@mui/material/colors";
 import _ from "underscore";
 
 import { useAppSelector } from "@/redux/store";
@@ -18,37 +11,48 @@ import { CustomLabel } from "@/components/styles";
 function EngravingEffect({
   name,
   data,
+  isPenalty,
   sum,
 }: {
   name: string;
+  isPenalty: boolean;
   data: TActiveEngraving[];
   sum: number;
 }) {
   const level = Math.min(3, Math.floor(sum / 5));
+
+  const overAlarm = !isPenalty ? (
+    sum > 15 ? (
+      <b style={{ color: orange[500] }}>{`+${sum - 15}`}</b>
+    ) : undefined
+  ) : sum >= 5 ? (
+    <b style={{ color: red[500] }}>{`+${sum - 4}`}</b>
+  ) : undefined;
+
   return (
-    <Box ml={1}>
-      <Typography
-        sx={{
-          textDecoration: level <= 0 ? "line-through" : undefined,
-          fontWeight: Math.max(100, level * 300),
-          lineHeight: 1,
-        }}
-      >
-        {name} Lv.{level}
-      </Typography>
-      <Typography variant={"body2"} gutterBottom>
-        {data.map((v) => v.Value).join("+")} = {sum}
-      </Typography>
-    </Box>
+    <ListItem disablePadding sx={{ ml: 1 }}>
+      <ListItemText
+        primary={
+          <>
+            {name}{" "}
+            <b style={{ fontWeight: level * 300 + 100 }}>{`Lv.${level}`}</b>
+          </>
+        }
+        secondary={
+          <>
+            {data.map((v) => v.Value).join("+")} = {sum} {overAlarm}
+          </>
+        }
+      />
+    </ListItem>
   );
 }
 
 export default function EngravingBoard() {
   const theme = useTheme();
-  const matches = useMediaQuery(theme.breakpoints.up("sm"));
   const jewelries = useAppSelector((state) => state.jewelries.value.curr);
   const stoneEngravings = useAppSelector(
-    (state) => state.abilityStone.value.curr.engravings,
+    (state) => state.abilityStone.value.engravings,
   );
   const engravingSlots = useAppSelector((state) => state.engravingSlots.value);
 
@@ -69,19 +73,21 @@ export default function EngravingBoard() {
       .map((v) => v.Effect)
       .value();
 
-    return _.partition(
-      jewelryEngravings.concat(slotEngravings, stoneEngravings),
-      (v) => v.IsPenalty,
-    );
+    return _.chain(jewelryEngravings.concat(slotEngravings, stoneEngravings))
+      .filter((v) => v.Value > 0)
+      .partition((v) => v.IsPenalty)
+      .value();
   }, [jewelries, stoneEngravings, engravingSlots]);
 
   return (
-    <Grid container spacing={{ xs: 1, sm: 3 }} py={1}>
+    <Grid container spacing={1}>
       <Grid item xs sm md={12}>
-        <Stack>
-          <CustomLabel sx={{ borderColor: theme.palette.info.main }}>
-            각인 효과
-          </CustomLabel>
+        <List dense>
+          <li>
+            <CustomLabel sx={{ borderColor: theme.palette.info.main }}>
+              각인 효과
+            </CustomLabel>
+          </li>
           {_.chain(totalEngravings[1])
             .groupBy((v) => v.Name)
             .mapObject((v, k) => {
@@ -94,22 +100,21 @@ export default function EngravingBoard() {
               <EngravingEffect
                 key={_.uniqueId("engraving-effect-item")}
                 name={v[0]}
+                isPenalty={false}
                 data={v[1].list}
                 sum={v[1].sum}
               />
             ))
             .value()}
-        </Stack>
+        </List>
       </Grid>
-      <Divider
-        orientation={matches ? "horizontal" : "vertical"}
-        flexItem={!matches}
-      />
       <Grid item xs sm md={12}>
-        <Stack>
-          <CustomLabel sx={{ borderColor: theme.palette.error.main }}>
-            감소 효과
-          </CustomLabel>
+        <List dense>
+          <li>
+            <CustomLabel sx={{ borderColor: theme.palette.error.main }}>
+              감소 효과
+            </CustomLabel>
+          </li>
           {_.chain(totalEngravings[0])
             .groupBy((v) => v.Name)
             .mapObject((v, k) => {
@@ -122,12 +127,13 @@ export default function EngravingBoard() {
               <EngravingEffect
                 key={_.uniqueId("engraving-effect-item")}
                 name={v[0]}
+                isPenalty={true}
                 data={v[1].list}
                 sum={v[1].sum}
               />
             ))
             .value()}
-        </Stack>
+        </List>
       </Grid>
     </Grid>
   );

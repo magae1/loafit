@@ -1,7 +1,6 @@
 import { Box, CircularProgress, CircularProgressProps } from "@mui/material";
-import _ from "underscore";
 
-import { QUALITY_COLORS } from "@/libs/data";
+import { qualityColor } from "@/libs/game-color";
 
 export default function QualityLabel(
   props: CircularProgressProps & { value: number },
@@ -9,15 +8,11 @@ export default function QualityLabel(
   const { value, size } = props;
   if (value < 0) return null;
 
-  const qualityColor = _.chain(QUALITY_COLORS)
-    .find((v) => v.minValue <= value)
-    .value()?.color;
-
   return (
     <Box sx={{ position: "relative", display: "inline-flex" }}>
       <CircularProgress
         variant={"determinate"}
-        sx={{ color: qualityColor }}
+        sx={{ color: qualityColor(value) }}
         size={size}
         value={value}
       />
@@ -37,7 +32,7 @@ export default function QualityLabel(
           style={{
             display: "inline-box",
             zIndex: 100,
-            color: qualityColor,
+            color: qualityColor(value),
             textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
           }}
         >

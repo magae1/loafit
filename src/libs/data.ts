@@ -23063,11 +23063,13 @@ export const auctionOptions: TAuctionOption = {
   ],
 };
 
-export const QUALITY_COLORS = [
-  { minValue: 100, color: "#fe9600" },
-  { minValue: 90, color: "#ce43fc" },
-  { minValue: 70, color: "#00b5ff" },
-  { minValue: 30, color: "#91fe02" },
-  { minValue: 10, color: "#ffd200" },
-  { minValue: 0, color: "#ff6000" },
+export const GRADE_COLORS = [
+  { name: "일반", color: "#b8b8b8" },
+  { name: "고급", color: "#91fe02" },
+  { name: "희귀", color: "#00b5ff" },
+  { name: "영웅", color: "#bf00fe" },
+  { name: "전설", color: "#f39303" },
+  { name: "유물", color: "#ff6000" },
+  { name: "고대", color: "#c9a472" },
+  { name: "에스더", color: "#3cf2e6" },
 ];

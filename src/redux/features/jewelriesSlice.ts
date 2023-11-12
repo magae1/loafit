@@ -65,10 +65,10 @@ export const jewelries = createSlice({
       state,
       action: PayloadAction<{ type: keyof wearingType; item: TAuctionItem }>,
     ) => {
-      state.value.prev[action.payload.type] =
-        state.value.curr[action.payload.type];
-      state.value.curr[action.payload.type].item = action.payload.item;
-      state.value.curr[action.payload.type].updatedAt = new Date();
+      const { type, item } = action.payload;
+      state.value.prev[type] = state.value.curr[type];
+      state.value.curr[type].item = item;
+      state.value.curr[type].updatedAt = new Date().getTime();
     },
     removeOne: (state, action: PayloadAction<keyof wearingType>) => {
       const type = action.payload;
@@ -86,7 +86,7 @@ export const jewelries = createSlice({
     removeAll: (state) => {
       state.value.prev = state.value.curr;
 
-      _.each(state.value.curr, (v, k) => {
+      _.each(state.value.curr, (v, _) => {
         v["item"] = null;
       });
     },
@@ -94,5 +94,5 @@ export const jewelries = createSlice({
 });
 
 export default jewelries.reducer;
-export const { initializeJewelries, restoreOne, removeOne, removeAll } =
+export const { initializeJewelries, addOne, restoreOne, removeOne, removeAll } =
   jewelries.actions;

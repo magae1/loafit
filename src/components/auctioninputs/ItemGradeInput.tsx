@@ -1,3 +1,4 @@
+"use client";
 import { Autocomplete, TextField } from "@mui/material";
 import { useDispatch } from "react-redux";
 import { useAppSelector } from "@/redux/store";
@@ -10,7 +11,7 @@ export default function ItemGradeInput({ options }: { options: string[] }) {
   );
   return (
     <Autocomplete
-      sx={{ width: "85px" }}
+      sx={{ width: "92px" }}
       size={"small"}
       value={grade}
       onChange={(_, newValue) => {

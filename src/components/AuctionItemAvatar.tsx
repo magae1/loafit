@@ -3,13 +3,14 @@ import { Avatar } from "@mui/material";
 
 import { TAuctionItem } from "@/libs/types";
 import QualityLabel from "@/components/QualityLabel";
+import { GRADE_COLORS } from "@/libs/data";
 
 interface Props {
   item: TAuctionItem;
 }
 
 export default function AuctionItemAvatar(props: Props) {
-  const { Icon, GradeQuality, Name } = props.item;
+  const { Icon, GradeQuality, Name, Grade } = props.item;
 
   const isUnRatedQuality = GradeQuality < 0;
 

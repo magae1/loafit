@@ -1,25 +1,25 @@
 "use client";
-import { useMemo } from "react";
+import { useState } from "react";
 import {
   ListItem,
   IconButton,
   ListItemText,
   ListItemAvatar,
-  Typography,
   Stack,
+  ListItemButton,
+  Collapse,
 } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import _ from "underscore";
 import { useDispatch } from "react-redux";
 
-import { TCategoryItem, wearingType } from "@/libs/types";
+import { wearingType } from "@/libs/types";
 import { useAppSelector } from "@/redux/store";
 import { removeOne, restoreOne } from "@/redux/features/jewelriesSlice";
 import EmptyJewelryListItem from "./EmptyJewelryListItem";
 import OptionChip from "@/components/OptionChip";
 import AuctionItemAvatar from "@/components/AuctionItemAvatar";
-import { auctionOptions } from "@/libs/data";
-import { openAuction } from "@/redux/features/auctionSlice";
+import ItemNameTypo from "@/components/ItemNameTypo";
 
 interface Props {
   type: keyof wearingType;
@@ -34,28 +34,16 @@ export default function JewelryListItem(props: Props) {
   const prevJewelry = useAppSelector(
     (state) => state.jewelries.value.prev[type],
   );
-
-  const code: number = useMemo(() => {
-    return _.chain(auctionOptions.Categories)
-      .map((v) => [
-        v.Subs,
-        { Code: v.Code, CodeName: v.CodeName } as TCategoryItem,
-      ])
-      .compact()
-      .flatten()
-      .find((v) => v.CodeName === currJewelry.codeName)
-      .get("Code")
-      .value();
-  }, [currJewelry.codeName]);
+  const [open, setOpen] = useState(false);
 
   if (!currJewelry.item) {
     return (
       <EmptyJewelryListItem
         prev_item={prevJewelry.item}
+        type={type}
         codeName={currJewelry.codeName}
-        onOpenAuction={() => {
-          dispatch(openAuction(code));
-        }}
+        open={open}
+        onOpen={() => setOpen((prevState) => !prevState)}
         onRestore={() => {
           dispatch(restoreOne(type));
         }}
@@ -64,36 +52,47 @@ export default function JewelryListItem(props: Props) {
   }
 
   return (
-    <ListItem
-      secondaryAction={
-        <IconButton
-          edge={"end"}
-          onClick={() => {
-            dispatch(removeOne(type));
-          }}
-        >
-          <Delete />
-        </IconButton>
-      }
-    >
-      <ListItemAvatar>
-        <AuctionItemAvatar item={currJewelry.item} />
-      </ListItemAvatar>
-      <ListItemText
-        disableTypography
-        primary={
-          <Typography>
-            [{currJewelry.item.Grade}] {currJewelry.item.Name}
-          </Typography>
+    <>
+      <ListItem
+        disablePadding
+        secondaryAction={
+          <IconButton
+            edge={"end"}
+            onClick={() => {
+              dispatch(removeOne(type));
+            }}
+          >
+            <Delete />
+          </IconButton>
         }
-        secondary={
-          <Stack spacing={0.5} direction={"row"} useFlexGap flexWrap={"wrap"}>
-            {currJewelry.item.Options.map((v) => (
-              <OptionChip option={v} key={_.uniqueId("jewelry-options")} />
-            ))}
-          </Stack>
-        }
-      />
-    </ListItem>
+      >
+        <ListItemButton onClick={() => setOpen((prevState) => !prevState)}>
+          <ListItemAvatar>
+            <AuctionItemAvatar item={currJewelry.item} />
+          </ListItemAvatar>
+          <ListItemText
+            disableTypography
+            primary={<ItemNameTypo item={currJewelry.item} />}
+            secondary={
+              <Stack
+                spacing={0.5}
+                direction={"row"}
+                useFlexGap
+                flexWrap={"wrap"}
+              >
+                {currJewelry.item.Options.map((v) => (
+                  <OptionChip option={v} key={_.uniqueId("jewelry-options")} />
+                ))}
+              </Stack>
+            }
+          />
+        </ListItemButton>
+      </ListItem>
+      <Collapse in={open}>
+        <ListItem>
+          <ListItemText inset secondary={"경매장 정보가 없습니다."} />
+        </ListItem>
+      </Collapse>
+    </>
   );
 }

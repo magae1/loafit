@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Autocomplete,
   TextField,
@@ -9,34 +9,36 @@ import {
   InputLabel,
   Typography,
   Grid,
+  NativeSelect,
+  InputBase,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
+import { useSnackbar } from "notistack";
 
 import { useAppSelector } from "@/redux/store";
 import { changeName, changeValue } from "@/redux/features/engravingSlotsSlice";
-import { TEtcSub } from "@/libs/types";
 import { engravingOptions } from "@/libs/data";
-import { GroupHeader, GroupItems } from "@/components/styles";
+import {
+  GroupHeader,
+  GroupItems,
+  StyledInput,
+  StyledInputRoot,
+} from "@/components/styles";
 
 export default function EngravingSlider({ index }: { index: number }) {
   const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const engravingEffects = useAppSelector(
     (state) => state.engravingSlots.value[index],
   );
+  const className = useAppSelector(
+    (state) => state.auction.value.options.CharacterClass,
+  );
   const [inputValue, setInputValue] = useState("");
-  const [value, setValue] = useState<TEtcSub | null>(null);
 
   if (!engravingEffects.Effect) {
     return <Typography>장착 중인 각인 효과가 없습니다.</Typography>;
   }
-
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  useEffect(() => {
-    let option = engravingOptions.find(
-      (v) => v.Text === engravingEffects.Effect.Name,
-    );
-    setValue(option ? option : null);
-  }, [engravingEffects]);
 
   return (
     <Grid container spacing={1}>
@@ -44,8 +46,18 @@ export default function EngravingSlider({ index }: { index: number }) {
         <Autocomplete
           fullWidth
           inputValue={inputValue}
-          value={value}
-          onChange={(e, newValue) => {
+          value={
+            engravingOptions.find(
+              (v) => v.Text === engravingEffects.Effect.Name,
+            ) ?? null
+          }
+          onChange={(_, newValue) => {
+            if (newValue?.Class != "" && className !== newValue?.Class) {
+              enqueueSnackbar("다른 클래스의 직업 각인을 적용합니다.", {
+                variant: "warning",
+              });
+            }
+
             dispatch(
               changeName({
                 slotIndex: index,
@@ -55,7 +67,9 @@ export default function EngravingSlider({ index }: { index: number }) {
           }}
           onInputChange={(_, newValue) => setInputValue(newValue)}
           renderInput={(params) => (
-            <TextField {...params} label={`슬롯${index + 1}`} />
+            <StyledInputRoot ref={params.InputProps.ref}>
+              <StyledInput {...params.inputProps} />
+            </StyledInputRoot>
           )}
           groupBy={(option) => option.Class}
           options={engravingOptions.sort((a, b) => {
@@ -76,20 +90,24 @@ export default function EngravingSlider({ index }: { index: number }) {
       </Grid>
       <Grid item xs={"auto"}>
         <FormControl>
-          <InputLabel>활성 포인트</InputLabel>
           <Select
-            label={"활성 포인트"}
             value={engravingEffects.Effect.Value}
             sx={{ width: "95px" }}
             onChange={(e) => {
               if (typeof e.target.value === "number") {
-                console.log(e.target.value);
                 dispatch(
                   changeValue({ slotIndex: index, value: e.target.value }),
                 );
               }
             }}
-            inputProps={{ "aria-label": "각인 활성 포인트" }}
+            input={
+              <InputBase
+                slots={{
+                  root: StyledInputRoot,
+                  input: StyledInput,
+                }}
+              />
+            }
           >
             <MenuItem value={0}>
               <em>미적용</em>

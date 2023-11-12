@@ -1,18 +1,12 @@
 "use client";
-import { useMemo } from "react";
 import { useDispatch } from "react-redux";
-import { Autocomplete, Slider, TextField, Typography } from "@mui/material";
+import { Autocomplete, TextField } from "@mui/material";
+import { ArrowDropUp } from "@mui/icons-material";
 import _ from "underscore";
 
 import { useAppSelector } from "@/redux/store";
-import { QUALITY_COLORS } from "@/libs/data";
 import { changeItemGradeQuality } from "@/redux/features/auctionSlice";
-
-const color = (value: number) => {
-  const idx = QUALITY_COLORS.findIndex((color) => color.minValue <= value);
-  if (idx >= 0) return QUALITY_COLORS[idx].color;
-  return undefined;
-};
+import { qualityColor } from "@/libs/game-color";
 
 export default function ItemGradeQualityInput({
   options,
@@ -33,6 +27,7 @@ export default function ItemGradeQualityInput({
         dispatch(changeItemGradeQuality(value));
       }}
       size={"small"}
+      getOptionLabel={(option) => `${option} ↑`}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -44,11 +39,12 @@ export default function ItemGradeQualityInput({
       renderOption={(props, option, state, ownerState) => (
         <li
           {...props}
+          key={_.uniqueId("quality-options-list")}
           style={{
-            textDecoration: `${color(option)} underline`,
+            textDecoration: `3px ${qualityColor(option)} underline`,
           }}
         >
-          {option} 이상
+          {option} <ArrowDropUp fontSize={"inherit"} />
         </li>
       )}
     />

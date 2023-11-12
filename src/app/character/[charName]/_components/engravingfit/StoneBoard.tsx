@@ -1,5 +1,5 @@
 "use client";
-import { SyntheticEvent, useMemo } from "react";
+import { SyntheticEvent, useMemo, useState } from "react";
 import {
   List,
   ListItem,
@@ -7,27 +7,19 @@ import {
   Rating,
   Typography,
   ListItemText,
-  IconButton,
+  ListItemButton,
+  Collapse,
 } from "@mui/material";
-import {
-  RadioButtonChecked,
-  RadioButtonUnchecked,
-  RemoveCircle,
-} from "@mui/icons-material";
+import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
 import { red, blue } from "@mui/material/colors";
 import _ from "underscore";
 import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/redux/store";
 import { TActiveEngraving } from "@/libs/types";
-import {
-  changeEngValue,
-  removeStone,
-  restoreStone,
-} from "@/redux/features/stoneSlice";
-import EmptyJewelryListItem from "./EmptyJewelryListItem";
-import AuctionItemAvatar from "@/components/AuctionItemAvatar";
-import { openAuction } from "@/redux/features/auctionSlice";
+import { changeEngValue } from "@/redux/features/stoneSlice";
+import ItemNameTypo from "@/components/ItemNameTypo";
+import JewelrySearchOptionList from "@/app/character/[charName]/_components/engravingfit/JewelrySearchOptionList";
 
 interface Props {
   option: TActiveEngraving;
@@ -68,14 +60,17 @@ function EngravingOptionItem(props: Props) {
 }
 
 export default function StoneBoard() {
-  const { curr, prev } = useAppSelector((state) => state.abilityStone.value);
+  const { item, engravings, codeName, updatedAt } = useAppSelector(
+    (state) => state.abilityStone.value,
+  );
   const dispatch = useDispatch();
+  const [open, setOpen] = useState(false);
 
   const StoneStates = useMemo(() => {
-    if (_.isEmpty(curr)) {
+    if (_.isEmpty(item)) {
       return null;
     }
-    return curr.engravings.map((v, i) => (
+    return engravings.map((v, i) => (
       <EngravingOptionItem
         key={_.uniqueId("stone-engraving-rate-item")}
         option={v}
@@ -84,39 +79,31 @@ export default function StoneBoard() {
         }}
       />
     ));
-  }, [curr, dispatch]);
+  }, [item, engravings, dispatch]);
 
   return (
-    <List disablePadding>
-      {curr.item ? (
-        <ListItem
-          secondaryAction={
-            <IconButton
-              edge={"end"}
-              onClick={() => {
-                dispatch(removeStone());
-              }}
-            >
-              <RemoveCircle />
-            </IconButton>
-          }
-        >
-          <AuctionItemAvatar item={curr.item} />
-          <ListItemText primary={`[${curr.item.Grade}] ${curr.item.Name}`} />
+    <>
+      <List disablePadding>
+        <ListItem disablePadding>
+          {item ? (
+            <ListItemButton onClick={() => setOpen((prevState) => !prevState)}>
+              <ListItemText primary={<ItemNameTypo item={item} />} />
+            </ListItemButton>
+          ) : (
+            <ListItemText secondary={"장착 중인 어빌리티 스톤이 없습니다."} />
+          )}
         </ListItem>
-      ) : (
-        <EmptyJewelryListItem
-          prev_item={prev.item}
-          codeName={curr.codeName}
-          onOpenAuction={() => {
-            dispatch(openAuction(30000));
-          }}
-          onRestore={() => {
-            dispatch(restoreStone());
-          }}
-        />
-      )}
-      <List dense>{StoneStates}</List>
-    </List>
+        <Collapse in={open}>
+          <ListItem>
+            <ListItemText inset secondary={"경매장 정보가 없습니다."} />
+          </ListItem>
+        </Collapse>
+        <List disablePadding>{StoneStates}</List>
+      </List>
+      <JewelrySearchOptionList
+        type={"어빌리티 스톤"}
+        codeName={"어빌리티 스톤"}
+      />
+    </>
   );
 }

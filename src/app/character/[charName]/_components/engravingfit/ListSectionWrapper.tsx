@@ -24,11 +24,7 @@ export default function ListSectionWrapper(props: Props) {
         <ListItemText primary={label} />
         {show ? <ExpandLess /> : <ExpandMore />}
       </ListItemButton>
-      <Collapse
-        in={show}
-        timeout={"auto"}
-        sx={{ "& .MuiList-root": { pl: 2 } }}
-      >
+      <Collapse in={show} timeout={"auto"}>
         {children}
       </Collapse>
     </>

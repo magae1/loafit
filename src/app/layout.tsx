@@ -1,12 +1,7 @@
 import { ReactNode } from "react";
 import { Metadata } from "next";
-import dayjs from "dayjs";
-const relativeTime = require("dayjs/plugin/relativeTime");
-import "dayjs/locale/ko";
-dayjs.locale("ko");
-dayjs.extend(relativeTime);
 
-import ThemeRegistry from "@/components/ThemeRegistry";
+import ThemeProvider from "@/components/ThemeProvider";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ReduxProvider from "@/redux/ReduxProvider";
@@ -21,11 +16,11 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html lang="ko">
       <body>
         <ReduxProvider>
-          <ThemeRegistry>
+          <ThemeProvider>
             <Header />
             {children}
             <Footer />
-          </ThemeRegistry>
+          </ThemeProvider>
         </ReduxProvider>
       </body>
     </html>
