@@ -8,6 +8,11 @@ import { useAppSelector } from "@/redux/store";
 import { ITEM_OPTION_TYPES, TActiveEngraving } from "@/libs/types";
 import { CustomLabel } from "@/components/styles";
 
+type EngravingInfo = {
+  engraving: TActiveEngraving;
+  codeName: string;
+};
+
 function EngravingEffect({
   name,
   data,

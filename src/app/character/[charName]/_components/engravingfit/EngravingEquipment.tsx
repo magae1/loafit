@@ -25,7 +25,7 @@ import {
   StyledInputRoot,
 } from "@/components/styles";
 
-export default function EngravingSlider({ index }: { index: number }) {
+export default function EngravingEquipment({ index }: { index: number }) {
   const dispatch = useDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const engravingEffects = useAppSelector(

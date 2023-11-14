@@ -25,8 +25,9 @@ export const abilityStone = createSlice({
       state.value = action.payload;
     },
     addStone: (state, action: PayloadAction<TAuctionItem>) => {
-      state.value.item = action.payload;
-      state.value.engravings = action.payload.Options.map((opt) =>
+      const item = action.payload;
+      state.value.item = item;
+      state.value.engravings = item.Options.map((opt) =>
         optionToEngraving(opt),
       );
       state.value.updatedAt = new Date().getTime();

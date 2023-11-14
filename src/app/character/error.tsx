@@ -2,7 +2,7 @@
 import { useEffect } from "react";
 import { Paper, Typography } from "@mui/material";
 
-import CenterWrapper from "@/components/CenterWrapper";
+import { CenterWrapper } from "@/components/styles";
 
 export default function Error({
   error,

@@ -18,18 +18,53 @@ import { SWRConfig, Fetcher } from "swr";
 
 import { useAppSelector } from "@/redux/store";
 import { closeAuction } from "@/redux/features/auctionSlice";
-import { auctionOptions } from "@/libs/data";
-import { TAuction, TRequestAuctionItems } from "@/libs/types";
-import ItemTiersInput from "@/components/auctioninputs/ItemTiersInput";
-import ItemGradeQualityInput from "@/components/auctioninputs/ItemGradeQualityInput";
-import ItemGradeInput from "@/components/auctioninputs/ItemGradeInput";
+import {
+  TAuction,
+  TDetailRequestAuctionItems,
+  TRequestAuctionItems,
+  TSearchDetailOption,
+} from "@/libs/types";
 import AuctionTable from "./AuctionTable";
 import AuctionTablePagination from "./AuctionTablePagination";
+import AuctionTableOptionInputs from "./AuctionTableOptionInputs";
+import { useState } from "react";
 
-const fetcher: Fetcher<TAuction, TRequestAuctionItems> = (options) =>
+const detailToNormal = (
+  options: TDetailRequestAuctionItems,
+): TRequestAuctionItems => ({
+  ItemLevelMin: options.ItemLevelMin,
+  ItemLevelMax: options.ItemLevelMax,
+  ItemGradeQuality: options.ItemGradeQuality,
+  SkillOptions: options.SkillOptions.map(
+    (opt): TSearchDetailOption => ({
+      FirstOption: opt.Value,
+      SecondOption: opt.Tripod ? opt.Tripod.Value : null,
+      MinValue: opt.MinValue,
+      MaxValue: opt.MaxValue,
+    }),
+  ),
+  EtcOptions: options.EtcOptions.map(
+    (opt): TSearchDetailOption => ({
+      FirstOption: opt.Value,
+      SecondOption: opt.EtcSub ? opt.EtcSub.Value : null,
+      MinValue: opt.MinValue,
+      MaxValue: opt.MaxValue,
+    }),
+  ),
+  Sort: options.Sort,
+  CategoryCode: options.Category ? options.Category.Code : null,
+  CharacterClass: options.CharacterClass,
+  ItemTier: options.ItemTier,
+  ItemGrade: options.ItemGrade,
+  ItemName: options.ItemName,
+  PageNo: options.PageNo,
+  SortCondition: options.SortCondition,
+});
+
+const fetcher: Fetcher<TAuction, TDetailRequestAuctionItems> = (options) =>
   fetch(`/api/auctions`, {
     method: "post",
-    body: JSON.stringify(options),
+    body: JSON.stringify(detailToNormal(options)),
   }).then((res) => res.json());
 
 export default function AuctionDialog() {
@@ -71,11 +106,7 @@ export default function AuctionDialog() {
           <Close />
         </IconButton>
         <DialogTitle sx={{ py: 1 }}>경매장</DialogTitle>
-        <DialogActions>
-          <ItemGradeInput options={auctionOptions.ItemGrades} />
-          <ItemGradeQualityInput options={auctionOptions.ItemGradeQualities} />
-          <ItemTiersInput options={auctionOptions.ItemTiers} />
-        </DialogActions>
+        <AuctionTableOptionInputs />
         <TableContainer>
           <Table size={"small"}>
             <TableHead>

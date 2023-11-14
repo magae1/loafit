@@ -1,12 +1,12 @@
-import { List, Grid, Divider } from "@mui/material";
+import { List, Grid, ListSubheader, ListItem } from "@mui/material";
 
-import StatsBoard from "@/app/character/[charName]/_components/engravingfit/StatsBoard";
-import ListSectionWrapper from "@/app/character/[charName]/_components/engravingfit/ListSectionWrapper";
-import EngravingBoard from "@/app/character/[charName]/_components/engravingfit/EngravingsBoard";
-import JewelryListItem from "@/app/character/[charName]/_components/engravingfit/JewelryListItem";
-import StoneBoard from "@/app/character/[charName]/_components/engravingfit/StoneBoard";
-import EngravingSlider from "@/app/character/[charName]/_components/engravingfit/EngravingSlider";
-import AuctionDialog from "@/app/character/[charName]/_components/engravingfit/AuctionDialog";
+import StatsBoard from "./engravingfit/StatsBoard";
+import EngravingBoard from "./engravingfit/EngravingsBoard";
+import JewelryListItem from "./engravingfit/JewelryListItem";
+import StoneBoard from "./engravingfit/StoneBoard";
+import EngravingEquipment from "./engravingfit/EngravingEquipment";
+import FittingSubheader from "./engravingfit/FittingSubheader";
+import AuctionDialog from "./auction/AuctionDialog";
 
 export default function EngravingFittings() {
   return (
@@ -17,34 +17,27 @@ export default function EngravingFittings() {
           <EngravingBoard />
         </Grid>
         <Grid item xs={12} md>
-          <ListSectionWrapper label={"장신구"}>
-            <List disablePadding>
+          <List disablePadding>
+            <List subheader={<FittingSubheader label={"장신구"} />}>
               <JewelryListItem type={"necklace"} />
-              <Divider />
               <JewelryListItem type={"earring1"} />
-              <Divider />
               <JewelryListItem type={"earring2"} />
-              <Divider />
               <JewelryListItem type={"ring1"} />
-              <Divider />
               <JewelryListItem type={"ring2"} />
-              <Divider />
               <JewelryListItem type={"bracelet"} />
             </List>
-          </ListSectionWrapper>
-          <ListSectionWrapper label={"어빌리티 스톤"}>
-            <StoneBoard />
-          </ListSectionWrapper>
-          <ListSectionWrapper label={"각인서"}>
-            <Grid container spacing={2} pl={4} py={1}>
-              <Grid item xs={12}>
-                <EngravingSlider index={0} />
-              </Grid>
-              <Grid item xs={12}>
-                <EngravingSlider index={1} />
-              </Grid>
-            </Grid>
-          </ListSectionWrapper>
+            <List subheader={<FittingSubheader label={"어빌리티 스톤"} />}>
+              <StoneBoard />
+            </List>
+            <List subheader={<ListSubheader>장착 각인</ListSubheader>}>
+              <ListItem>
+                <EngravingEquipment index={0} />
+              </ListItem>
+              <ListItem>
+                <EngravingEquipment index={1} />
+              </ListItem>
+            </List>
+          </List>
         </Grid>
       </Grid>
       <AuctionDialog />

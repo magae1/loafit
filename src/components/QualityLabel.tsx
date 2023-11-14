@@ -31,7 +31,7 @@ export default function QualityLabel(
         <strong
           style={{
             display: "inline-box",
-            zIndex: 100,
+            zIndex: 1,
             color: qualityColor(value),
             textShadow: "-1px 0 black, 0 1px black, 1px 0 black, 0 -1px black",
           }}

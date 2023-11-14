@@ -5,9 +5,11 @@ import {
   lighten,
   darken,
   autocompleteClasses,
+  ListSubheader,
 } from "@mui/material";
 import { grey, blue } from "@mui/material/colors";
 import { numberInputClasses } from "@mui/base";
+import { lineHeight } from "@mui/system";
 
 export const CustomScrollBarBox = styled(Box)`
   overflow-x: scroll;
@@ -49,7 +51,7 @@ export const GroupHeader = styled("div")(({ theme }) => ({
   position: "sticky",
   top: "-8px",
   padding: "4px 10px",
-  color: theme.palette.primary.dark,
+  color: theme.palette.primary.contrastText,
   backgroundColor:
     theme.palette.mode === "light"
       ? lighten(theme.palette.primary.light, 0.85)
@@ -96,7 +98,7 @@ export const StyledNumInputRoot = styled("div")(
   font-weight: 400;
   border-radius: 8px;
   color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
-  background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
+  background: ${theme.palette.background.paper};
   border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
   box-shadow: 0px 2px 4px ${
     theme.palette.mode === "dark" ? "rgba(0,0,0, 0.5)" : "rgba(0,0,0, 0.05)"
@@ -155,7 +157,7 @@ export const StyledButton = styled("button")(
   font-size: 0.875rem;
   line-height: 1;
   box-sizing: border-box;
-  background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
+  background: ${theme.palette.background.paper};
   border: 0;
   color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
   transition-property: all;
@@ -226,3 +228,21 @@ export const NumInputAdornment = styled("div")(
   color: ${theme.palette.mode === "dark" ? grey[500] : grey[700]};
 `,
 );
+
+export const PriceWrapper = styled("div")`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+export const CenterWrapper = styled(Box)`
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+export const DetailsListSubheader = styled(ListSubheader)(({ theme }) => ({
+  lineHeight: theme.spacing(3),
+}));

@@ -2,29 +2,40 @@
 import { ReactNode, useState } from "react";
 import {
   ListItemButton,
-  ListItemText,
   Collapse,
   ListItemIcon,
+  ListItem,
+  ListItemProps,
 } from "@mui/material";
 import { ExpandLess, ExpandMore } from "@mui/icons-material";
 
-interface Props {
+interface Props extends ListItemProps {
   children: ReactNode;
-  label: string;
+  open?: boolean;
   icon?: ReactNode;
+  item?: ReactNode;
 }
 
 export default function ListSectionWrapper(props: Props) {
-  const { children, label, icon } = props;
-  const [show, setShow] = useState(true);
+  const { children, icon, item, open = true } = props;
+  const [show, setShow] = useState<boolean>(open);
   return (
     <>
-      <ListItemButton onClick={() => setShow((s) => !s)}>
-        {icon && <ListItemIcon>{icon}</ListItemIcon>}
-        <ListItemText primary={label} />
-        {show ? <ExpandLess /> : <ExpandMore />}
-      </ListItemButton>
-      <Collapse in={show} timeout={"auto"}>
+      <ListItem {...props} disablePadding>
+        <ListItemButton
+          sx={{ height: "inherit" }}
+          onClick={() => setShow((s) => !s)}
+        >
+          {icon && <ListItemIcon>{icon}</ListItemIcon>}
+          {item}
+          {show ? <ExpandLess /> : <ExpandMore />}
+        </ListItemButton>
+      </ListItem>
+      <Collapse
+        in={show}
+        timeout={"auto"}
+        sx={{ "& .MuiList-root": { pl: 2 } }}
+      >
         {children}
       </Collapse>
     </>

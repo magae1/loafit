@@ -1,31 +1,25 @@
-"use client";
-import { useDispatch } from "react-redux";
-import { Autocomplete, TextField } from "@mui/material";
+import { Autocomplete, SxProps, TextField, Theme } from "@mui/material";
 import { ArrowDropUp } from "@mui/icons-material";
 import _ from "underscore";
 
-import { useAppSelector } from "@/redux/store";
-import { changeItemGradeQuality } from "@/redux/features/auctionSlice";
 import { qualityColor } from "@/libs/game-color";
 
-export default function ItemGradeQualityInput({
-  options,
-}: {
+interface Props {
+  quality: number | null;
+  setQuality: (v: number | null) => void;
   options: number[];
-}) {
-  const dispatch = useDispatch();
-  const value = useAppSelector(
-    (state) => state.auction.value.options.ItemGradeQuality,
-  );
+  sx?: SxProps<Theme>;
+}
+
+export default function ItemGradeQualityInput(props: Props) {
+  const { quality, options, setQuality, sx } = props;
 
   return (
     <Autocomplete
-      value={value}
+      value={quality}
       options={options}
-      sx={{ width: "85px" }}
-      onChange={(_, value) => {
-        dispatch(changeItemGradeQuality(value));
-      }}
+      sx={sx}
+      onChange={(_, newValue) => setQuality(newValue)}
       size={"small"}
       getOptionLabel={(option) => `${option} ↑`}
       renderInput={(params) => (

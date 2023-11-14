@@ -25,6 +25,7 @@ export enum JEWELRY_TYPES {
   RING = "반지",
   BRACELET = "팔찌",
 }
+export const JEWELRY = "장신구";
 export const STONE = "어빌리티 스톤";
 
 export type TStat = {
@@ -288,21 +289,35 @@ export type TAuctionOption = {
   Classes: string[];
 };
 
-export type TSearchDetailOption = {
-  FirstOption: number;
-  SecondOption: number | null;
+type TMinMaxValue = {
   MinValue: number | null;
   MaxValue: number | null;
 };
 
-export type TRequestAuctionItems = {
+export interface TSearchDetailOption extends TMinMaxValue {
+  FirstOption: number;
+  SecondOption: number | null;
+}
+
+export interface TDetailSkillOption extends TMinMaxValue {
+  Value: number;
+  Class: string;
+  Text: string;
+  IsSkillGroup: boolean;
+  Tripod?: TTripod;
+}
+
+export interface TDetailEtcOption extends TMinMaxValue {
+  Value: number;
+  Text: string;
+  EtcSub?: TEtcSub;
+}
+
+type RequestItems = {
   ItemLevelMin: number;
   ItemLevelMax: number;
   ItemGradeQuality: number | null;
-  SkillOptions: TSearchDetailOption[];
-  EtcOptions: TSearchDetailOption[];
   Sort: AUCTION_SORT_TYPES;
-  CategoryCode: number | null;
   CharacterClass: string | null;
   ItemTier: number;
   ItemGrade: string | null;
@@ -310,6 +325,18 @@ export type TRequestAuctionItems = {
   PageNo: number;
   SortCondition: "ASC" | "DESC";
 };
+
+export interface TDetailRequestAuctionItems extends RequestItems {
+  SkillOptions: TDetailSkillOption[];
+  EtcOptions: TDetailEtcOption[];
+  Category: TCategoryItem | null;
+}
+
+export interface TRequestAuctionItems extends RequestItems {
+  SkillOptions: TSearchDetailOption[];
+  EtcOptions: TSearchDetailOption[];
+  CategoryCode: number | null;
+}
 
 export type TAuction = {
   PageNo: number;

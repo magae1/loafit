@@ -15,6 +15,20 @@ type stateType = {
   };
 };
 
+type TWearing = {
+  type: keyof wearingType;
+  name: JEWELRY_TYPES;
+};
+
+export const WEARINGS: TWearing[] = [
+  { type: "necklace", name: JEWELRY_TYPES.NECKLACE },
+  { type: "earring1", name: JEWELRY_TYPES.EARRING },
+  { type: "earring2", name: JEWELRY_TYPES.EARRING },
+  { type: "ring1", name: JEWELRY_TYPES.RING },
+  { type: "ring2", name: JEWELRY_TYPES.RING },
+  { type: "bracelet", name: JEWELRY_TYPES.BRACELET },
+];
+
 const basicValue = {
   necklace: {
     codeName: JEWELRY_TYPES.NECKLACE,
@@ -66,7 +80,7 @@ export const jewelries = createSlice({
       action: PayloadAction<{ type: keyof wearingType; item: TAuctionItem }>,
     ) => {
       const { type, item } = action.payload;
-      state.value.prev[type] = state.value.curr[type];
+      state.value.prev[type].item = state.value.curr[type].item;
       state.value.curr[type].item = item;
       state.value.curr[type].updatedAt = new Date().getTime();
     },

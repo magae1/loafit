@@ -40,6 +40,15 @@ export default function AuctionTable() {
         </TableRow>
       ));
     }
+    return (
+      <TableBody>
+        <TableRow>
+          <TableCell colSpan={6} sx={{ height: 570 }}>
+            <Typography textAlign={"center"}>잘못된 요청입니다.</Typography>
+          </TableCell>
+        </TableRow>
+      </TableBody>
+    );
   } else {
     if (!data.Items) {
       return (

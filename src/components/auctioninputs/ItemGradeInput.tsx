@@ -1,22 +1,23 @@
-"use client";
-import { Autocomplete, TextField } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { useAppSelector } from "@/redux/store";
-import { changeItemGrade } from "@/redux/features/auctionSlice";
+import { Autocomplete, SxProps, TextField, Theme } from "@mui/material";
+import _ from "underscore";
 
-export default function ItemGradeInput({ options }: { options: string[] }) {
-  const dispatch = useDispatch();
-  const grade = useAppSelector(
-    (state) => state.auction.value.options.ItemGrade,
-  );
+import { GRADE_COLORS } from "@/libs/data";
+
+interface Props {
+  grade: string | null;
+  setGrade: (v: string | null) => void;
+  options: string[];
+  sx?: SxProps<Theme>;
+}
+
+export default function ItemGradeInput(props: Props) {
+  const { grade, setGrade, options, sx } = props;
   return (
     <Autocomplete
-      sx={{ width: "92px" }}
+      sx={sx}
       size={"small"}
       value={grade}
-      onChange={(_, newValue) => {
-        dispatch(changeItemGrade(newValue));
-      }}
+      onChange={(_, newValue) => setGrade(newValue)}
       renderInput={(params) => (
         <TextField
           {...params}
@@ -26,6 +27,17 @@ export default function ItemGradeInput({ options }: { options: string[] }) {
         />
       )}
       options={options}
+      renderOption={(props, option, state, ownerState) => (
+        <li
+          {...props}
+          key={_.uniqueId("quality-options-list")}
+          style={{
+            color: GRADE_COLORS[state.index].color,
+          }}
+        >
+          {option}
+        </li>
+      )}
     />
   );
 }

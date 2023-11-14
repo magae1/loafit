@@ -1,5 +1,5 @@
 "use client";
-import { SyntheticEvent, useMemo, useState } from "react";
+import { SyntheticEvent, useMemo } from "react";
 import {
   List,
   ListItem,
@@ -7,19 +7,25 @@ import {
   Rating,
   Typography,
   ListItemText,
-  ListItemButton,
-  Collapse,
+  ListSubheader,
+  Stack,
+  IconButton,
 } from "@mui/material";
-import { RadioButtonChecked, RadioButtonUnchecked } from "@mui/icons-material";
+import {
+  Delete,
+  RadioButtonChecked,
+  RadioButtonUnchecked,
+} from "@mui/icons-material";
 import { red, blue } from "@mui/material/colors";
 import _ from "underscore";
 import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/redux/store";
 import { TActiveEngraving } from "@/libs/types";
-import { changeEngValue } from "@/redux/features/stoneSlice";
+import { changeEngValue, removeStone } from "@/redux/features/stoneSlice";
+import ListSectionWrapper from "@/app/character/[charName]/_components/engravingfit/ListSectionWrapper";
 import ItemNameTypo from "@/components/ItemNameTypo";
-import JewelrySearchOptionList from "@/app/character/[charName]/_components/engravingfit/JewelrySearchOptionList";
+import AuctionItemInfoItem from "@/components/AuctionItemInfoItem";
 
 interface Props {
   option: TActiveEngraving;
@@ -64,7 +70,6 @@ export default function StoneBoard() {
     (state) => state.abilityStone.value,
   );
   const dispatch = useDispatch();
-  const [open, setOpen] = useState(false);
 
   const StoneStates = useMemo(() => {
     if (_.isEmpty(item)) {
@@ -84,26 +89,74 @@ export default function StoneBoard() {
   return (
     <>
       <List disablePadding>
-        <ListItem disablePadding>
-          {item ? (
-            <ListItemButton onClick={() => setOpen((prevState) => !prevState)}>
+        <ListSectionWrapper
+          open={false}
+          item={
+            item ? (
               <ListItemText primary={<ItemNameTypo item={item} />} />
-            </ListItemButton>
-          ) : (
-            <ListItemText secondary={"장착 중인 어빌리티 스톤이 없습니다."} />
-          )}
-        </ListItem>
-        <Collapse in={open}>
+            ) : (
+              <ListItemText secondary={"장착 중인 어빌리티 스톤이 없습니다."} />
+            )
+          }
+        >
+          <List
+            dense
+            subheader={
+              <ListSubheader sx={{ lineHeight: "24px" }}>
+                아이템 세부정보
+              </ListSubheader>
+            }
+          >
+            {item ? (
+              <>
+                <AuctionItemInfoItem item={item} />
+                <Grid container spacing={1} sx={{ pl: 9 }}>
+                  {item.Options.map((opt) => (
+                    <Grid item key={_.uniqueId(`item-options`)}>
+                      <Typography variant={"overline"}>
+                        {opt.OptionName}
+                      </Typography>
+                    </Grid>
+                  ))}
+                </Grid>
+              </>
+            ) : (
+              <ListItem>
+                <ListItemText primary={"아이템 정보를 찾을 수 없습니다."} />
+              </ListItem>
+            )}
+          </List>
+          <List
+            dense
+            subheader={
+              <ListSubheader sx={{ lineHeight: "24px" }}>
+                가격 정보
+              </ListSubheader>
+            }
+          >
+            {item && item.AuctionInfo ? (
+              <></>
+            ) : (
+              <ListItem>
+                <ListItemText primary={"가격 정보를 찾을 수 없습니다."} />
+              </ListItem>
+            )}
+          </List>
           <ListItem>
-            <ListItemText inset secondary={"경매장 정보가 없습니다."} />
+            <Stack direction={"row"} spacing={1}>
+              <IconButton
+                disabled={!item}
+                onClick={() => dispatch(removeStone())}
+              >
+                <Delete />
+              </IconButton>
+            </Stack>
           </ListItem>
-        </Collapse>
-        <List disablePadding>{StoneStates}</List>
+        </ListSectionWrapper>
       </List>
-      <JewelrySearchOptionList
-        type={"어빌리티 스톤"}
-        codeName={"어빌리티 스톤"}
-      />
+      <List disablePadding sx={{ pl: 2 }}>
+        {StoneStates}
+      </List>
     </>
   );
 }

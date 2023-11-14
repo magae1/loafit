@@ -21,7 +21,7 @@ export const theme = extendTheme({
     },
     MuiButton: {
       defaultProps: {
-        variant: "outlined",
+        variant: "contained",
       },
     },
     MuiCard: {

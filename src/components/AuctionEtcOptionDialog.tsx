@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 
-import { option } from "@/app/character/[charName]/_components/engravingfit/JewelrySearchOptionList";
+import { option } from "@/components/ItemSearchOptionsList";
 import { TEtcOption, TEtcSub, TSearchDetailOption } from "@/libs/types";
 import { auctionOptions } from "@/libs/data";
 import NumberInput from "@/components/NumberInput";

@@ -1,24 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   AUCTION_SORT_TYPES,
-  STONE,
-  TRequestAuctionItems,
-  TSearchDetailOption,
-  wearingType,
+  TCategoryItem,
+  TDetailRequestAuctionItems,
 } from "@/libs/types";
 
 type defaultStateType = {
   value: {
     open: boolean;
-    options: TRequestAuctionItems;
-    type: keyof wearingType | typeof STONE | null;
+    categoryOptions: TCategoryItem[];
+    options: TDetailRequestAuctionItems;
   };
 };
 
 const defaultState: defaultStateType = {
   value: {
     open: false,
-    type: null,
+    categoryOptions: [],
     options: {
       ItemLevelMin: 0,
       ItemLevelMax: 1700,
@@ -26,7 +24,7 @@ const defaultState: defaultStateType = {
       SkillOptions: [],
       EtcOptions: [],
       Sort: AUCTION_SORT_TYPES.BUY_PRICE,
-      CategoryCode: null,
+      Category: null,
       CharacterClass: null,
       ItemTier: 3,
       ItemGrade: null,
@@ -44,15 +42,14 @@ export const auctionSlice = createSlice({
     openAuction: (
       state,
       action: PayloadAction<{
-        type: keyof wearingType | typeof STONE;
-        code: number;
-        detailOptions: TSearchDetailOption[];
+        categoryOptions?: TCategoryItem[];
+        categoryItem: TCategoryItem;
       }>,
     ) => {
-      const { type, code, detailOptions } = action.payload;
-      state.value.type = type;
-      state.value.options.CategoryCode = code;
-      state.value.options.EtcOptions = detailOptions;
+      const { categoryOptions = [], categoryItem } = action.payload;
+      state.value.categoryOptions = categoryOptions;
+      state.value.options.Category = categoryItem;
+      state.value.options.ItemName = null;
       state.value.open = true;
     },
     closeAuction: (state) => {
@@ -66,6 +63,10 @@ export const auctionSlice = createSlice({
       state.value.options.PageNo = 1;
       state.value.options.ItemTier = action.payload;
     },
+    changeCategory: (state, action: PayloadAction<TCategoryItem | null>) => {
+      state.value.options.PageNo = 1;
+      state.value.options.Category = action.payload;
+    },
     changeItemGradeQuality: (state, action: PayloadAction<number | null>) => {
       state.value.options.PageNo = 1;
       state.value.options.ItemGradeQuality = action.payload;
@@ -73,6 +74,10 @@ export const auctionSlice = createSlice({
     changeItemGrade: (state, action: PayloadAction<string | null>) => {
       state.value.options.PageNo = 1;
       state.value.options.ItemGrade = action.payload;
+    },
+    changeItemName: (state, action: PayloadAction<string>) => {
+      state.value.options.PageNo = 1;
+      state.value.options.ItemName = action.payload;
     },
     changePageNo: (state, action: PayloadAction<number>) => {
       state.value.options.PageNo = action.payload;
@@ -89,4 +94,6 @@ export const {
   setCharacterClass,
   changeItemGrade,
   changePageNo,
+  changeCategory,
+  changeItemName,
 } = auctionSlice.actions;

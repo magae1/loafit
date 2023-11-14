@@ -6,11 +6,11 @@ import {
   IconButton,
   List,
   ListItem,
-  ListItemAvatar,
+  ListItemIcon,
   ListItemText,
   ListSubheader,
 } from "@mui/material";
-import { RemoveCircle } from "@mui/icons-material";
+import { RemoveCircle, Search, Settings } from "@mui/icons-material";
 import _ from "underscore";
 import { useDispatch } from "react-redux";
 
@@ -35,7 +35,7 @@ export type option = {
   searchOption: TSearchDetailOption;
 };
 
-export default function JewelrySearchOptionList(props: Props) {
+export default function ItemSearchOptionsList(props: Props) {
   const { type, codeName } = props;
   const dispatch = useDispatch();
   const [openDialog, setOpenDialog] = useState(false);
@@ -78,9 +78,7 @@ export default function JewelrySearchOptionList(props: Props) {
       <List
         dense
         subheader={
-          <ListSubheader sx={{ lineHeight: "24px" }}>
-            검색 세부 옵션
-          </ListSubheader>
+          <ListSubheader sx={{ lineHeight: "24px" }}>경매장 검색</ListSubheader>
         }
       >
         {detailOptions.length > 0 ? (
@@ -90,11 +88,11 @@ export default function JewelrySearchOptionList(props: Props) {
               disableGutters
               key={_.uniqueId("detail-option-list-items")}
             >
-              <ListItemAvatar sx={{ minWidth: "40px" }}>
+              <ListItemIcon>
                 <IconButton onClick={() => deleteOption(i)}>
                   <RemoveCircle />
                 </IconButton>
-              </ListItemAvatar>
+              </ListItemIcon>
               <ListItemText
                 primary={`${opt.firstName}: ${opt.secondName} ${
                   opt.searchOption.MinValue
@@ -109,33 +107,20 @@ export default function JewelrySearchOptionList(props: Props) {
             </ListItem>
           ))
         ) : (
-          <ListItem sx={{ ml: 3 }}>
-            <ListItemText secondary={"옵션이 없습니다."} />
+          <ListItem>
+            <ListItemText primary={"옵션이 없습니다."} />
           </ListItem>
         )}
         <ListItem>
           <Grid container spacing={1}>
             <Grid item xs={6}>
               <Button fullWidth onClick={() => setOpenDialog(true)}>
-                세부 옵션 추가
+                <Settings /> 옵션 추가
               </Button>
             </Grid>
             <Grid item xs={6}>
-              <Button
-                fullWidth
-                onClick={() => {
-                  dispatch(
-                    openAuction({
-                      type: type,
-                      code: code,
-                      detailOptions: detailOptions.map(
-                        (opt) => opt.searchOption,
-                      ),
-                    }),
-                  );
-                }}
-              >
-                경매장 검색
+              <Button fullWidth onClick={() => {}}>
+                <Search /> 검색
               </Button>
             </Grid>
           </Grid>

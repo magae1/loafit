@@ -1,19 +1,20 @@
-"use client";
-import { Autocomplete, TextField } from "@mui/material";
-import { useDispatch } from "react-redux";
+import { Autocomplete, SxProps, TextField, Theme } from "@mui/material";
 
-import { changeItemTier } from "@/redux/features/auctionSlice";
-import { useAppSelector } from "@/redux/store";
+interface Props {
+  options: number[];
+  value: number;
+  setValue: (v: number) => void;
+  sx?: SxProps<Theme>;
+}
 
-export default function ItemTiersInput({ options }: { options: number[] }) {
-  const dispatch = useDispatch();
-  const value = useAppSelector((state) => state.auction.value.options.ItemTier);
+export default function ItemTiersInput(props: Props) {
+  const { options, value, setValue, sx } = props;
 
   return (
     <Autocomplete
-      sx={{ minWidth: "50px" }}
+      sx={sx}
       value={value}
-      onChange={(_, newValue) => dispatch(changeItemTier(newValue))}
+      onChange={(_, newValue) => setValue(newValue)}
       options={options}
       size={"small"}
       disableClearable
