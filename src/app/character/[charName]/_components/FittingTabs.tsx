@@ -18,11 +18,7 @@ import {
   jewelryParser,
   stoneParser,
 } from "@/libs/transformers";
-import {
-  initializeJewelries,
-  removeAll,
-} from "@/redux/features/jewelriesSlice";
-import { initializeStone, removeStone } from "@/redux/features/stoneSlice";
+import { initialize, removeAll } from "@/redux/features/wearingsSlice";
 import {
   initializeSlots,
   removeSlots,
@@ -87,13 +83,11 @@ export default function Fittings(props: Props) {
   }, []);
 
   useEffect(() => {
-    dispatch(initializeJewelries(jewelries));
-    stone && dispatch(initializeStone(stone));
-    engravingSlots && dispatch(initializeSlots(engravingSlots));
+    dispatch(initialize({ jewelries: jewelries, stone: stone }));
     dispatch(setCharacterClass(profile.CharacterClassName));
+    engravingSlots && dispatch(initializeSlots(engravingSlots));
     return () => {
       dispatch(removeAll());
-      dispatch(removeStone());
       dispatch(removeSlots());
     };
   }, [dispatch]);

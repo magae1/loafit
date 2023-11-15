@@ -22,7 +22,7 @@ import { useDispatch } from "react-redux";
 
 import { useAppSelector } from "@/redux/store";
 import { TActiveEngraving } from "@/libs/types";
-import { changeEngValue, removeStone } from "@/redux/features/stoneSlice";
+import { changeEngValue, removeOne } from "@/redux/features/wearingsSlice";
 import ListSectionWrapper from "@/app/character/[charName]/_components/engravingfit/ListSectionWrapper";
 import ItemNameTypo from "@/components/ItemNameTypo";
 import AuctionItemInfoItem from "@/components/AuctionItemInfoItem";
@@ -67,7 +67,7 @@ function EngravingOptionItem(props: Props) {
 
 export default function StoneBoard() {
   const { item, engravings, codeName, updatedAt } = useAppSelector(
-    (state) => state.abilityStone.value,
+    (state) => state.wearings.value.stone,
   );
   const dispatch = useDispatch();
 
@@ -146,7 +146,7 @@ export default function StoneBoard() {
             <Stack direction={"row"} spacing={1}>
               <IconButton
                 disabled={!item}
-                onClick={() => dispatch(removeStone())}
+                onClick={() => dispatch(removeOne("stone"))}
               >
                 <Delete />
               </IconButton>

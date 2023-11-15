@@ -27,7 +27,7 @@ export default function StatsBoard() {
     _.object(STAT_TYPES, new Array(STAT_TYPES.length).fill(0)),
   );
 
-  const jewelries = useAppSelector((state) => state.jewelries.value.curr);
+  const jewelries = useAppSelector((state) => state.wearings.value);
 
   const currentStats = useMemo(() => {
     return _.chain(jewelries)

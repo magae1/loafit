@@ -176,11 +176,15 @@ export type TActiveEngraving = {
 
 export type TFittingItem = {
   codeName: string;
-  item: TAuctionItem | null;
+  item?: TAuctionItem;
+  prevItem?: TAuctionItem;
   updatedAt?: number;
+  searchOption: IIndividualRequestItems;
 };
 
-export interface TJewelry extends TFittingItem {}
+export interface TJewelry extends TFittingItem {
+  prevItem?: TAuctionItem;
+}
 
 export interface TStone extends TFittingItem {
   engravings: TActiveEngraving[];
@@ -230,15 +234,6 @@ export type TNotice = {
   Date: Date;
   Link: string;
   Type: string;
-};
-
-export type wearingType = {
-  necklace: TJewelry;
-  earring1: TJewelry;
-  earring2: TJewelry;
-  ring1: TJewelry;
-  ring2: TJewelry;
-  bracelet: TJewelry;
 };
 
 export type TEtcSub = {
@@ -313,30 +308,44 @@ export interface TDetailEtcOption extends TMinMaxValue {
   EtcSub?: TEtcSub;
 }
 
-type RequestItems = {
+export type TCommonRequestItems = {
+  CharacterClass: string | null;
+};
+
+type TIndividualRequestItems = {
   ItemLevelMin: number;
   ItemLevelMax: number;
   ItemGradeQuality: number | null;
-  Sort: AUCTION_SORT_TYPES;
-  CharacterClass: string | null;
   ItemTier: number;
   ItemGrade: string | null;
   ItemName: string | null;
+  CategoryCode: number | null;
+};
+
+export type TDetailRequestItems = {
+  SkillOptions: TDetailSkillOption[];
+  EtcOptions: TDetailEtcOption[];
+};
+
+export interface IIndividualRequestItems
+  extends TIndividualRequestItems,
+    TDetailRequestItems {}
+
+export type TRequestItems = {
+  SkillOptions: TSearchDetailOption[];
+  EtcOptions: TSearchDetailOption[];
+};
+
+export type ExpendedRequestItems = {
+  Sort: AUCTION_SORT_TYPES;
   PageNo: number;
   SortCondition: "ASC" | "DESC";
 };
-
-export interface TDetailRequestAuctionItems extends RequestItems {
-  SkillOptions: TDetailSkillOption[];
-  EtcOptions: TDetailEtcOption[];
-  Category: TCategoryItem | null;
-}
-
-export interface TRequestAuctionItems extends RequestItems {
-  SkillOptions: TSearchDetailOption[];
-  EtcOptions: TSearchDetailOption[];
-  CategoryCode: number | null;
-}
+export interface TRequestAuctionItems
+  extends TCommonRequestItems,
+    TIndividualRequestItems,
+    TRequestItems,
+    ExpendedRequestItems {}
 
 export type TAuction = {
   PageNo: number;

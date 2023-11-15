@@ -66,6 +66,7 @@ export const StyledInputRoot = styled("div")(
   ({ theme }) => `
   border-radius: 8px;
   width: inherit;
+  minHeight: 46px;
   color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
   background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
   border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
@@ -97,6 +98,7 @@ export const StyledNumInputRoot = styled("div")(
   ({ theme }) => `
   font-weight: 400;
   border-radius: 8px;
+  minHeight: 46px;
   color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
   background: ${theme.palette.background.paper};
   border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
@@ -228,6 +230,13 @@ export const NumInputAdornment = styled("div")(
   color: ${theme.palette.mode === "dark" ? grey[500] : grey[700]};
 `,
 );
+
+export const StyledInputLabel = styled("label")(({ theme }) => ({
+  color: theme.palette.mode === "dark" ? grey[500] : grey[700],
+  fontSize: "0.85em",
+  lineHeight: 1,
+  width: "100%",
+}));
 
 export const PriceWrapper = styled("div")`
   display: flex;

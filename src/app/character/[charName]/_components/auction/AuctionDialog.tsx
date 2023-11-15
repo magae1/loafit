@@ -1,5 +1,6 @@
 "use client";
 import {
+  Button,
   Dialog,
   DialogActions,
   DialogTitle,
@@ -12,29 +13,25 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { Close } from "@mui/icons-material";
-import { useDispatch } from "react-redux";
-import { SWRConfig, Fetcher } from "swr";
+import { Close, Search } from "@mui/icons-material";
+import useSWR, { Fetcher } from "swr";
 
 import { useAppSelector } from "@/redux/store";
-import { closeAuction } from "@/redux/features/auctionSlice";
 import {
+  AUCTION_SORT_TYPES,
+  ExpendedRequestItems,
   TAuction,
-  TDetailRequestAuctionItems,
+  TDetailRequestItems,
   TRequestAuctionItems,
+  TRequestItems,
   TSearchDetailOption,
 } from "@/libs/types";
 import AuctionTable from "./AuctionTable";
-import AuctionTablePagination from "./AuctionTablePagination";
-import AuctionTableOptionInputs from "./AuctionTableOptionInputs";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { wearingType } from "@/redux/features/wearingsSlice";
+import AuctionTablePagination from "@/app/character/[charName]/_components/auction/AuctionTablePagination";
 
-const detailToNormal = (
-  options: TDetailRequestAuctionItems,
-): TRequestAuctionItems => ({
-  ItemLevelMin: options.ItemLevelMin,
-  ItemLevelMax: options.ItemLevelMax,
-  ItemGradeQuality: options.ItemGradeQuality,
+const detailToNormal = (options: TDetailRequestItems): TRequestItems => ({
   SkillOptions: options.SkillOptions.map(
     (opt): TSearchDetailOption => ({
       FirstOption: opt.Value,
@@ -51,42 +48,59 @@ const detailToNormal = (
       MaxValue: opt.MaxValue,
     }),
   ),
-  Sort: options.Sort,
-  CategoryCode: options.Category ? options.Category.Code : null,
-  CharacterClass: options.CharacterClass,
-  ItemTier: options.ItemTier,
-  ItemGrade: options.ItemGrade,
-  ItemName: options.ItemName,
-  PageNo: options.PageNo,
-  SortCondition: options.SortCondition,
 });
 
-const fetcher: Fetcher<TAuction, TDetailRequestAuctionItems> = (options) =>
+const fetcher: Fetcher<TAuction, TRequestAuctionItems> = (options) =>
   fetch(`/api/auctions`, {
     method: "post",
-    body: JSON.stringify(detailToNormal(options)),
+    body: JSON.stringify(options),
   }).then((res) => res.json());
 
-export default function AuctionDialog() {
-  const theme = useTheme();
-  const dispatch = useDispatch();
+interface Props {
+  type: keyof wearingType;
+}
 
+export default function AuctionDialog(props: Props) {
+  const { type } = props;
+  const theme = useTheme();
   const matches = useMediaQuery(theme.breakpoints.up("sm"));
-  const open = useAppSelector((state) => state.auction.value.open);
+  const options = useAppSelector(
+    (state) => state.wearings.value[type].searchOption,
+  );
+  const commonOption = useAppSelector((state) => state.auction.value);
+
+  const detailOptions = detailToNormal({
+    SkillOptions: options.SkillOptions,
+    EtcOptions: options.EtcOptions,
+  });
+  const individualOptions = { ...options, detailOptions };
+
+  const [open, setOpen] = useState(false);
+  const [expendOptions, setExpendOptions] = useState<ExpendedRequestItems>({
+    Sort: AUCTION_SORT_TYPES.BUY_PRICE,
+    PageNo: 1,
+    SortCondition: "ASC",
+  });
+  const { data, isLoading, isValidating, error } = useSWR<TAuction>(
+    { ...individualOptions, ...expendOptions, ...commonOption },
+    fetcher,
+    { revalidateIfStale: false, revalidateOnFocus: false },
+  );
+  const onClose = useCallback(() => setOpen(false), []);
+  const setPageNo = useCallback(
+    (n: number) =>
+      setExpendOptions((prevState) => ({ ...prevState, PageNo: n })),
+    [],
+  );
 
   return (
-    <SWRConfig
-      value={{
-        revalidateIfStale: false,
-        revalidateOnFocus: false,
-        fetcher: fetcher,
-      }}
-    >
+    <>
+      <Button startIcon={<Search />} onClick={() => setOpen(true)}>
+        찾기
+      </Button>
       <Dialog
         open={open}
-        onClose={() => {
-          dispatch(closeAuction());
-        }}
+        onClose={onClose}
         fullWidth={matches}
         fullScreen={!matches}
         maxWidth={"sm"}
@@ -99,33 +113,36 @@ export default function AuctionDialog() {
             right: 0,
             color: (theme) => theme.palette.grey[500],
           }}
-          onClick={() => {
-            dispatch(closeAuction());
-          }}
+          onClick={onClose}
         >
           <Close />
         </IconButton>
         <DialogTitle sx={{ py: 1 }}>경매장</DialogTitle>
-        <AuctionTableOptionInputs />
         <TableContainer>
           <Table size={"small"}>
             <TableHead>
               <TableRow>
-                <TableCell />
-                <TableCell align={"center"}>아이템 정보</TableCell>
+                <TableCell colSpan={2} align={"center"}>
+                  아이템 정보
+                </TableCell>
                 <TableCell align={"center"}>품질</TableCell>
                 <TableCell align={"center"}>입찰가</TableCell>
                 <TableCell align={"center"}>즉구가</TableCell>
                 <TableCell align={"center"}>마감</TableCell>
               </TableRow>
             </TableHead>
-            <AuctionTable />
+            <AuctionTable data={data} isLoading={isLoading || isValidating} />
           </Table>
         </TableContainer>
         <DialogActions>
-          <AuctionTablePagination />
+          <AuctionTablePagination
+            PageNo={expendOptions.PageNo}
+            changePageNo={(v) => setPageNo(v)}
+            TotalCount={data?.TotalCount}
+            loading={isLoading || isValidating}
+          />
         </DialogActions>
       </Dialog>
-    </SWRConfig>
+    </>
   );
 }

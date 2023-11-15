@@ -1,4 +1,4 @@
-import { TAuctionOption, TEtcSub } from "@/libs/types";
+import { IIndividualRequestItems, TAuctionOption, TEtcSub } from "@/libs/types";
 
 export const engravingOptions: TEtcSub[] = [
   {
@@ -23073,3 +23073,15 @@ export const GRADE_COLORS = [
   { name: "고대", color: "#c9a472" },
   { name: "에스더", color: "#3cf2e6" },
 ];
+
+export const basicOptions: IIndividualRequestItems = {
+  ItemLevelMin: 0,
+  ItemLevelMax: 1700,
+  ItemGradeQuality: null,
+  SkillOptions: [],
+  EtcOptions: [],
+  CategoryCode: null,
+  ItemTier: 3,
+  ItemGrade: null,
+  ItemName: null,
+};

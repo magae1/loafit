@@ -1,13 +1,8 @@
 import { TAuctionInfo } from "@/libs/types";
-import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Typography,
-} from "@mui/material";
+import { ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import dayjs from "dayjs";
+
 import GoldPriceLabel from "@/components/GoldPriceLabel";
-import { PriceWrapper } from "@/components/styles";
 
 interface Props {
   info: TAuctionInfo;
@@ -30,13 +25,13 @@ export default function AuctionItemAuctionInfoItems(props: Props) {
       <ListItem>
         <ListItemText primary={"시작 입찰가"} />
         <ListItemIcon>
-          <GoldPriceLabel price={BidStartPrice} />
+          <GoldPriceLabel price={StartPrice} />
         </ListItemIcon>
       </ListItem>
       <ListItem>
         <ListItemText primary={"현 입찰가"} />
         <ListItemIcon>
-          <GoldPriceLabel price={StartPrice} />
+          <GoldPriceLabel price={BidStartPrice} />
         </ListItemIcon>
       </ListItem>
       <ListItem>
@@ -44,6 +39,14 @@ export default function AuctionItemAuctionInfoItems(props: Props) {
         <ListItemIcon>
           <GoldPriceLabel price={BuyPrice} />
         </ListItemIcon>
+      </ListItem>
+      <ListItem>
+        <ListItemText primary={"입찰 횟수"} />
+        <ListItemIcon>{BidCount}회</ListItemIcon>
+      </ListItem>
+      <ListItem>
+        <ListItemText primary={"마감 일시"} />
+        <ListItemIcon>{dayjs(EndDate).format("YY.MM.DD A hh:mm")}</ListItemIcon>
       </ListItem>
       <ListItem>
         <ListItemText primary={"구매 시 남은 거래 가능 횟수"} />

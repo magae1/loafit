@@ -1,4 +1,3 @@
-"use client";
 import {
   Skeleton,
   TableBody,
@@ -6,44 +5,56 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
+import { KeyboardArrowDown } from "@mui/icons-material";
 import _ from "underscore";
-import useSWR from "swr";
 
 import AuctionTableRow from "./AuctionTableRow";
-import { useAppSelector } from "@/redux/store";
 import { TAuction } from "@/libs/types";
 
-export default function AuctionTable() {
-  const options = useAppSelector((state) => state.auction.value.options);
-  const { data, isLoading, isValidating, error } = useSWR<TAuction>(options);
+interface Props {
+  data?: TAuction;
+  isLoading: boolean;
+}
+
+export default function AuctionTable(props: Props) {
+  const { data, isLoading } = props;
 
   if (!data) {
-    if (isLoading || isValidating) {
-      return _.range(10).map(() => (
-        <TableRow key={_.uniqueId("table-row-skeleton")}>
-          <TableCell sx={{ px: 1 }} />
-          <TableCell sx={{ px: 0 }}>
-            <Skeleton width={225} height={45} />
-          </TableCell>
-          <TableCell>
-            <Skeleton height={36} />
-          </TableCell>
-          <TableCell>
-            <Skeleton variant={"text"} />
-          </TableCell>
-          <TableCell>
-            <Skeleton variant={"text"} />
-          </TableCell>
-          <TableCell>
-            <Skeleton variant={"text"} />
-          </TableCell>
-        </TableRow>
-      ));
+    if (isLoading) {
+      return (
+        <TableBody>
+          {_.range(10).map(() => (
+            <TableRow
+              key={_.uniqueId("table-row-skeleton")}
+              sx={{ height: "54.5px" }}
+            >
+              <TableCell sx={{ px: 1 }} align={"center"}>
+                <KeyboardArrowDown />
+              </TableCell>
+              <TableCell sx={{ px: 0 }} component={"th"}>
+                <Skeleton variant={"text"} width={185} />
+              </TableCell>
+              <TableCell align={"center"}>
+                <Skeleton width={36} height={24} />
+              </TableCell>
+              <TableCell align={"center"}>
+                <Skeleton variant={"text"} />
+              </TableCell>
+              <TableCell align={"center"}>
+                <Skeleton variant={"text"} />
+              </TableCell>
+              <TableCell align={"center"}>
+                <Skeleton variant={"text"} />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      );
     }
     return (
       <TableBody>
         <TableRow>
-          <TableCell colSpan={6} sx={{ height: 570 }}>
+          <TableCell colSpan={6} sx={{ height: 525 }}>
             <Typography textAlign={"center"}>잘못된 요청입니다.</Typography>
           </TableCell>
         </TableRow>
@@ -54,7 +65,7 @@ export default function AuctionTable() {
       return (
         <TableBody>
           <TableRow>
-            <TableCell colSpan={6} sx={{ height: 570 }}>
+            <TableCell colSpan={6} sx={{ height: 525 }}>
               <Typography textAlign={"center"}>
                 해당하는 아이템이 없습니다.
               </Typography>
@@ -68,7 +79,7 @@ export default function AuctionTable() {
         {data.Items.map((item) => (
           <AuctionTableRow key={_.uniqueId("action-table-row")} item={item} />
         ))}
-        <TableRow sx={{ height: 57 * (10 - data.Items.length) }} />
+        <TableRow sx={{ height: 52.5 * (10 - data.Items.length) }} />
       </TableBody>
     );
   }

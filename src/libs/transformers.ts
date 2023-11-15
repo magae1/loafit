@@ -13,6 +13,7 @@ import {
   TFittingItem,
   TActiveStat,
 } from "@/libs/types";
+import { basicOptions } from "@/libs/data";
 
 type TItemPartBox = {
   Element_000: string;
@@ -149,6 +150,7 @@ const equipmentParser = (equipment: TArmoryEquipment): TFittingItem => {
       Level: null,
       Options: options.value(),
     },
+    searchOption: basicOptions,
   };
 };
 
@@ -169,19 +171,19 @@ const optionToStat = (option: TItemOption): TActiveStat => {
 
 export const stoneParser = (equipment: TArmoryEquipment): TStone => {
   const data = equipmentParser(equipment);
-  const engravings = data.item?.Options.map((v) => optionToEngraving(v));
+  const engravings = data.item?.Options.map(
+    (v): TActiveEngraving => optionToEngraving(v),
+  );
   return {
+    ...data,
     engravings: engravings ?? [],
-    codeName: data.codeName,
-    item: data.item,
   };
 };
 
 export const jewelryParser = (equipment: TArmoryEquipment): TJewelry => {
   const data = equipmentParser(equipment);
   return {
-    codeName: data.codeName,
-    item: data.item,
+    ...data,
   };
 };
 

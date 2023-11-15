@@ -2,14 +2,11 @@
 import { useState } from "react";
 import {
   Autocomplete,
-  TextField,
   Select,
   FormControl,
   MenuItem,
-  InputLabel,
   Typography,
   Grid,
-  NativeSelect,
   InputBase,
 } from "@mui/material";
 import { useDispatch } from "react-redux";
@@ -22,6 +19,7 @@ import {
   GroupHeader,
   GroupItems,
   StyledInput,
+  StyledInputLabel,
   StyledInputRoot,
 } from "@/components/styles";
 
@@ -32,7 +30,7 @@ export default function EngravingEquipment({ index }: { index: number }) {
     (state) => state.engravingSlots.value[index],
   );
   const className = useAppSelector(
-    (state) => state.auction.value.options.CharacterClass,
+    (state) => state.auction.value.CharacterClass,
   );
   const [inputValue, setInputValue] = useState("");
 
@@ -41,7 +39,10 @@ export default function EngravingEquipment({ index }: { index: number }) {
   }
 
   return (
-    <Grid container spacing={1}>
+    <Grid container columnSpacing={1}>
+      <Grid item xs={12}>
+        <StyledInputLabel>슬롯{index + 1}</StyledInputLabel>
+      </Grid>
       <Grid item xs>
         <Autocomplete
           fullWidth

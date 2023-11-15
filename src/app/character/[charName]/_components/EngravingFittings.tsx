@@ -5,8 +5,22 @@ import EngravingBoard from "./engravingfit/EngravingsBoard";
 import JewelryListItem from "./engravingfit/JewelryListItem";
 import StoneBoard from "./engravingfit/StoneBoard";
 import EngravingEquipment from "./engravingfit/EngravingEquipment";
-import FittingSubheader from "./engravingfit/FittingSubheader";
-import AuctionDialog from "./auction/AuctionDialog";
+import { JEWELRY_TYPES } from "@/libs/types";
+import { wearingType } from "@/redux/features/wearingsSlice";
+
+type TWearing = {
+  type: keyof wearingType;
+  name: JEWELRY_TYPES;
+};
+
+const WEARINGS: TWearing[] = [
+  { type: "necklace", name: JEWELRY_TYPES.NECKLACE },
+  { type: "earring1", name: JEWELRY_TYPES.EARRING },
+  { type: "earring2", name: JEWELRY_TYPES.EARRING },
+  { type: "ring1", name: JEWELRY_TYPES.RING },
+  { type: "ring2", name: JEWELRY_TYPES.RING },
+  { type: "bracelet", name: JEWELRY_TYPES.BRACELET },
+];
 
 export default function EngravingFittings() {
   return (
@@ -18,18 +32,27 @@ export default function EngravingFittings() {
         </Grid>
         <Grid item xs={12} md>
           <List disablePadding>
-            <List subheader={<FittingSubheader label={"장신구"} />}>
-              <JewelryListItem type={"necklace"} />
-              <JewelryListItem type={"earring1"} />
-              <JewelryListItem type={"earring2"} />
-              <JewelryListItem type={"ring1"} />
-              <JewelryListItem type={"ring2"} />
-              <JewelryListItem type={"bracelet"} />
+            <List
+              subheader={
+                <ListSubheader sx={{ zIndex: 10 }}>장신구</ListSubheader>
+              }
+            >
+              {WEARINGS.map((w) => (
+                <JewelryListItem key={w.type} type={w.type} codeName={w.name} />
+              ))}
             </List>
-            <List subheader={<FittingSubheader label={"어빌리티 스톤"} />}>
+            <List
+              subheader={
+                <ListSubheader sx={{ zIndex: 10 }}>어빌리티 스톤</ListSubheader>
+              }
+            >
               <StoneBoard />
             </List>
-            <List subheader={<ListSubheader>장착 각인</ListSubheader>}>
+            <List
+              subheader={
+                <ListSubheader sx={{ zIndex: 10 }}>장착 각인</ListSubheader>
+              }
+            >
               <ListItem>
                 <EngravingEquipment index={0} />
               </ListItem>
@@ -40,7 +63,6 @@ export default function EngravingFittings() {
           </List>
         </Grid>
       </Grid>
-      <AuctionDialog />
     </>
   );
 }

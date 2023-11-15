@@ -1,15 +1,13 @@
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 
-import jewelriesReducer from "@/redux/features/jewelriesSlice";
-import abilityStoneReducer from "@/redux/features/stoneSlice";
+import wearingsReducer from "@/redux/features/wearingsSlice";
 import engravingSlotsReducer from "@/redux/features/engravingSlotsSlice";
 import auctionReducer from "@/redux/features/auctionSlice";
 
 export const store = configureStore({
   reducer: {
-    jewelries: jewelriesReducer,
-    abilityStone: abilityStoneReducer,
+    wearings: wearingsReducer,
     engravingSlots: engravingSlotsReducer,
     auction: auctionReducer,
   },

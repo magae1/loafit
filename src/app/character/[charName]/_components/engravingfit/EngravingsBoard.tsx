@@ -8,11 +8,6 @@ import { useAppSelector } from "@/redux/store";
 import { ITEM_OPTION_TYPES, TActiveEngraving } from "@/libs/types";
 import { CustomLabel } from "@/components/styles";
 
-type EngravingInfo = {
-  engraving: TActiveEngraving;
-  codeName: string;
-};
-
 function EngravingEffect({
   name,
   data,
@@ -55,14 +50,12 @@ function EngravingEffect({
 
 export default function EngravingBoard() {
   const theme = useTheme();
-  const jewelries = useAppSelector((state) => state.jewelries.value.curr);
-  const stoneEngravings = useAppSelector(
-    (state) => state.abilityStone.value.engravings,
-  );
+  const jewelries = useAppSelector((state) => state.wearings.value);
   const engravingSlots = useAppSelector((state) => state.engravingSlots.value);
 
   const totalEngravings = useMemo(() => {
     const jewelryEngravings: TActiveEngraving[] = _.chain(jewelries)
+      .omit("stone")
       .map((v) => (v.item ? v.item.Options : []))
       .flatten()
       .filter((v) => v.Type === ITEM_OPTION_TYPES.ABILITY_ENGRAVE)
@@ -78,11 +71,13 @@ export default function EngravingBoard() {
       .map((v) => v.Effect)
       .value();
 
-    return _.chain(jewelryEngravings.concat(slotEngravings, stoneEngravings))
+    return _.chain(
+      jewelryEngravings.concat(slotEngravings, jewelries.stone.engravings),
+    )
       .filter((v) => v.Value > 0)
       .partition((v) => v.IsPenalty)
       .value();
-  }, [jewelries, stoneEngravings, engravingSlots]);
+  }, [jewelries, engravingSlots]);
 
   return (
     <Grid container spacing={1}>

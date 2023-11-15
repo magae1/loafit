@@ -5,8 +5,6 @@ import {
   TableCell,
   Collapse,
   Typography,
-  Stack,
-  ListItem,
   List,
   Grid,
 } from "@mui/material";
@@ -19,13 +17,11 @@ dayjs.locale("ko");
 dayjs.extend(relativeTime);
 
 import { TAuctionItem } from "@/libs/types";
-import OptionChip from "@/components/OptionChip";
 import { qualityColor } from "@/libs/game-color";
 import AuctionItemAuctionInfoItems from "@/components/AuctionItemAuctionInfoItems";
 import ItemNameTypo from "@/components/ItemNameTypo";
 import AuctionItemInfoItem from "@/components/AuctionItemInfoItem";
 import { DetailsListSubheader } from "@/components/styles";
-import EquipmentDialog from "@/app/character/[charName]/_components/auction/EquipmentsDialog";
 
 interface Props {
   item: TAuctionItem;
@@ -40,7 +36,10 @@ export default function AuctionTableRow(props: Props) {
     <>
       <TableRow
         hover
-        sx={{ "& .MuiTableCell-root": { borderBottom: "unset" } }}
+        sx={{
+          "& .MuiTableCell-root": { borderBottom: "unset" },
+          height: "52.5px",
+        }}
         onClick={() => setOpen((prevState) => !prevState)}
       >
         <TableCell sx={{ px: 1 }} align={"center"}>
@@ -48,11 +47,6 @@ export default function AuctionTableRow(props: Props) {
         </TableCell>
         <TableCell sx={{ px: 0 }} component={"th"}>
           <ItemNameTypo item={item} fontSize={"inherit"} />
-          <Stack direction={"row"} spacing={0.5}>
-            {item.Options.map((v) => (
-              <OptionChip key={_.uniqueId("auction-item-options")} option={v} />
-            ))}
-          </Stack>
         </TableCell>
         <TableCell align={"center"}>
           {item.GradeQuality ? (
@@ -107,9 +101,6 @@ export default function AuctionTableRow(props: Props) {
                 <AuctionItemAuctionInfoItems info={item.AuctionInfo} />
               )}
             </List>
-            <ListItem>
-              <EquipmentDialog auctionItem={item} />
-            </ListItem>
           </Collapse>
         </TableCell>
       </TableRow>

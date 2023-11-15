@@ -11,7 +11,6 @@ import {
   TextField,
 } from "@mui/material";
 
-import { option } from "@/components/ItemSearchOptionsList";
 import { TEtcOption, TEtcSub, TSearchDetailOption } from "@/libs/types";
 import { auctionOptions } from "@/libs/data";
 import NumberInput from "@/components/NumberInput";
@@ -22,6 +21,12 @@ import {
   StyledInput,
   StyledInputRoot,
 } from "@/components/styles";
+
+type option = {
+  firstName: string;
+  secondName: string;
+  searchOption: TSearchDetailOption;
+};
 
 interface Props {
   open: boolean;
