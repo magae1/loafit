@@ -74,6 +74,7 @@ const basicValue = {
     searchOption: {
       ...basicOptions,
       CategoryCode: 30000,
+      ItemGrade: "유물",
     },
     engravings: [],
   },
@@ -102,7 +103,8 @@ export const wearings = createSlice({
         }
       });
       if (stone) {
-        state.value.stone = stone;
+        state.value.stone.item = stone.item;
+        state.value.stone.engravings = stone.engravings;
       }
     },
     addOne: (

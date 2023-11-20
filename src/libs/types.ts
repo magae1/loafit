@@ -127,7 +127,7 @@ export type TArmoryEngraving = {
 
 export type TAuctionInfo = {
   StartPrice: number;
-  BuyPrice: number;
+  BuyPrice: number | null;
   BidPrice: number;
   EndDate: Date;
   BidCount: number;
@@ -299,13 +299,13 @@ export interface TDetailSkillOption extends TMinMaxValue {
   Class: string;
   Text: string;
   IsSkillGroup: boolean;
-  Tripod?: TTripod;
+  Tripod: TTripod;
 }
 
 export interface TDetailEtcOption extends TMinMaxValue {
   Value: number;
   Text: string;
-  EtcSub?: TEtcSub;
+  EtcSub: TEtcSub;
 }
 
 export type TCommonRequestItems = {
@@ -319,7 +319,7 @@ type TIndividualRequestItems = {
   ItemTier: number;
   ItemGrade: string | null;
   ItemName: string | null;
-  CategoryCode: number | null;
+  CategoryCode: number;
 };
 
 export type TDetailRequestItems = {

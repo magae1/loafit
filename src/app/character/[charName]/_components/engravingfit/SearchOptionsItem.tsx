@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useCallback, useMemo, useState } from "react";
+import { ReactNode, useCallback, useState } from "react";
 import {
   Button,
   Dialog,
@@ -7,10 +7,16 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
+  IconButton,
+  List,
   ListItem,
   ListItemButton,
+  ListItemIcon,
+  ListItemText,
 } from "@mui/material";
+import { Delete } from "@mui/icons-material";
 import { useDispatch } from "react-redux";
+import _ from "underscore";
 
 import ItemGradeInput from "@/components/auctioninputs/ItemGradeInput";
 import { auctionOptions } from "@/libs/data";
@@ -21,6 +27,8 @@ import {
   changeSearchOption,
 } from "@/redux/features/wearingsSlice";
 import { useAppSelector } from "@/redux/store";
+import { TDetailEtcOption } from "@/libs/types";
+import EtcOptionInput from "@/components/auctioninputs/EtcOptionInput";
 
 interface Props {
   type: keyof wearingType;
@@ -37,8 +45,10 @@ export default function SearchOptionsItem(props: Props) {
   const [itemGradeQuality, setItemGradeQuality] = useState<number | null>(null);
   const [itemTier, setItemTier] = useState(3);
   const [itemGrade, setItemGrade] = useState<string | null>(null);
+  const [etcOptions, setEtcOptions] = useState<TDetailEtcOption[]>([]);
 
   const onClose = useCallback(() => setOpen(false), []);
+
   const onSave = () => {
     onClose();
     dispatch(
@@ -49,10 +59,26 @@ export default function SearchOptionsItem(props: Props) {
           ItemTier: itemTier,
           ItemGradeQuality: itemGradeQuality,
           ItemGrade: itemGrade,
+          EtcOptions: etcOptions,
         },
       }),
     );
   };
+
+  const onDeleteOption = useCallback(
+    (idx: number) => setEtcOptions((prevState) => prevState.toSpliced(idx, 1)),
+    [],
+  );
+
+  const onAddOption = useCallback(
+    (opt: TDetailEtcOption) =>
+      setEtcOptions((prevState) => {
+        const newState = [...prevState];
+        newState.push(opt);
+        return newState;
+      }),
+    [],
+  );
 
   return (
     <>
@@ -85,6 +111,34 @@ export default function SearchOptionsItem(props: Props) {
                 setQuality={(v) => setItemGradeQuality(v)}
                 options={auctionOptions.ItemGradeQualities}
               />
+            </Grid>
+            <Grid item xs={12}>
+              <EtcOptionInput
+                options={auctionOptions.EtcOptions}
+                onAdd={onAddOption}
+              >
+                <List dense>
+                  {_.isEmpty(etcOptions) ? (
+                    <ListItem>기타 옵션이 설정되지 않았습니다.</ListItem>
+                  ) : (
+                    etcOptions.map((opt, idx) => (
+                      <ListItem key={_.uniqueId("etc-options")}>
+                        <ListItemText
+                          primary={`${opt.EtcSub.Text} ${opt.MinValue ?? " "}~${
+                            opt.MaxValue ?? " "
+                          }`}
+                          secondary={opt.Text}
+                        />
+                        <ListItemIcon>
+                          <IconButton onClick={() => onDeleteOption(idx)}>
+                            <Delete />
+                          </IconButton>
+                        </ListItemIcon>
+                      </ListItem>
+                    ))
+                  )}
+                </List>
+              </EtcOptionInput>
             </Grid>
           </Grid>
         </DialogContent>

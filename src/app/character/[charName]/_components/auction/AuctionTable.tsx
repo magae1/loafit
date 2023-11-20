@@ -10,14 +10,17 @@ import _ from "underscore";
 
 import AuctionTableRow from "./AuctionTableRow";
 import { TAuction } from "@/libs/types";
+import { wearingType } from "@/redux/features/wearingsSlice";
 
 interface Props {
   data?: TAuction;
+  type: keyof wearingType;
   isLoading: boolean;
+  onClose: () => void;
 }
 
 export default function AuctionTable(props: Props) {
-  const { data, isLoading } = props;
+  const { data, type, isLoading, onClose } = props;
 
   if (!data) {
     if (isLoading) {
@@ -77,7 +80,12 @@ export default function AuctionTable(props: Props) {
     return (
       <TableBody>
         {data.Items.map((item) => (
-          <AuctionTableRow key={_.uniqueId("action-table-row")} item={item} />
+          <AuctionTableRow
+            key={_.uniqueId("action-table-row")}
+            type={type}
+            item={item}
+            onClose={onClose}
+          />
         ))}
         <TableRow sx={{ height: 52.5 * (10 - data.Items.length) }} />
       </TableBody>

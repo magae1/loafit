@@ -10,8 +10,10 @@ import {
   ListSubheader,
   Stack,
   IconButton,
+  ListItemIcon,
 } from "@mui/material";
 import {
+  ArrowForward,
   Delete,
   RadioButtonChecked,
   RadioButtonUnchecked,
@@ -26,6 +28,10 @@ import { changeEngValue, removeOne } from "@/redux/features/wearingsSlice";
 import ListSectionWrapper from "@/app/character/[charName]/_components/engravingfit/ListSectionWrapper";
 import ItemNameTypo from "@/components/ItemNameTypo";
 import AuctionItemInfoItem from "@/components/AuctionItemInfoItem";
+import AuctionDialog from "@/app/character/[charName]/_components/auction/AuctionDialog";
+import { DetailsListSubheader } from "@/components/styles";
+import SearchOptionsItem from "./SearchOptionsItem";
+import AuctionItemAuctionInfoItems from "@/components/AuctionItemAuctionInfoItems";
 
 interface Props {
   option: TActiveEngraving;
@@ -66,10 +72,27 @@ function EngravingOptionItem(props: Props) {
 }
 
 export default function StoneBoard() {
-  const { item, engravings, codeName, updatedAt } = useAppSelector(
-    (state) => state.wearings.value.stone,
-  );
+  const { item, engravings, codeName, updatedAt, searchOption } =
+    useAppSelector((state) => state.wearings.value.stone);
   const dispatch = useDispatch();
+
+  const optionList = useMemo(() => {
+    const { ItemTier, ItemGrade, ItemGradeQuality } = searchOption;
+    return [
+      `${ItemTier}티어`,
+      ItemGrade && `${ItemGrade}`,
+      ItemGradeQuality && `품질 ${ItemGradeQuality}이상`,
+    ];
+  }, [dispatch, searchOption]);
+
+  const etcOptionList = useMemo(
+    () =>
+      searchOption.EtcOptions.map(
+        (opt) =>
+          `${opt.EtcSub.Text} ${opt.MinValue ?? ""}~${opt.MaxValue ?? ""}`,
+      ),
+    [searchOption.EtcOptions],
+  );
 
   const StoneStates = useMemo(() => {
     if (_.isEmpty(item)) {
@@ -135,12 +158,26 @@ export default function StoneBoard() {
             }
           >
             {item && item.AuctionInfo ? (
-              <></>
+              <AuctionItemAuctionInfoItems info={item.AuctionInfo} />
             ) : (
               <ListItem>
                 <ListItemText primary={"가격 정보를 찾을 수 없습니다."} />
               </ListItem>
             )}
+          </List>
+          <List
+            dense
+            subheader={<DetailsListSubheader>아이템 찾기</DetailsListSubheader>}
+          >
+            <SearchOptionsItem type={"stone"}>
+              <ListItemText
+                primary={etcOptionList.join(", ")}
+                secondary={_.compact(optionList).join(", ")}
+              />
+              <ListItemIcon>
+                <ArrowForward />
+              </ListItemIcon>
+            </SearchOptionsItem>
           </List>
           <ListItem>
             <Stack direction={"row"} spacing={1}>
@@ -150,6 +187,7 @@ export default function StoneBoard() {
               >
                 <Delete />
               </IconButton>
+              <AuctionDialog type={"stone"} />
             </Stack>
           </ListItem>
         </ListSectionWrapper>

@@ -67,8 +67,8 @@ export const StyledInputRoot = styled("div")(
   border-radius: 8px;
   width: inherit;
   minHeight: 46px;
-  color: ${theme.palette.mode === "dark" ? grey[300] : grey[900]};
-  background: ${theme.palette.mode === "dark" ? grey[900] : "#fff"};
+  color: ${theme.palette.primary.contrastText};
+  background: ${theme.palette.background.paper};
   border: 1px solid ${theme.palette.mode === "dark" ? grey[700] : grey[200]};
   box-shadow: 0px 2px 4px ${
     theme.palette.mode === "dark" ? "rgba(0,0,0, 0.5)" : "rgba(0,0,0, 0.05)"
@@ -78,7 +78,7 @@ export const StyledInputRoot = styled("div")(
   font-weight: 400;
   align-items: center;
   
-  &.MuiAutocomplete-root.Mui-expanded {
+   &.${autocompleteClasses.expanded} {
     border-color: ${theme.palette.primary.light};
     box-shadow: 0 0 0 3px ${theme.palette.primary.dark};
   }

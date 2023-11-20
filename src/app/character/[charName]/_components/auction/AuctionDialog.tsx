@@ -6,10 +6,7 @@ import {
   DialogTitle,
   IconButton,
   Table,
-  TableCell,
   TableContainer,
-  TableHead,
-  TableRow,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
@@ -30,6 +27,7 @@ import AuctionTable from "./AuctionTable";
 import { useCallback, useState } from "react";
 import { wearingType } from "@/redux/features/wearingsSlice";
 import AuctionTablePagination from "@/app/character/[charName]/_components/auction/AuctionTablePagination";
+import AuctionTableHead from "@/app/character/[charName]/_components/auction/AuctionTableHead";
 
 const detailToNormal = (options: TDetailRequestItems): TRequestItems => ({
   SkillOptions: options.SkillOptions.map(
@@ -73,7 +71,7 @@ export default function AuctionDialog(props: Props) {
     SkillOptions: options.SkillOptions,
     EtcOptions: options.EtcOptions,
   });
-  const individualOptions = { ...options, detailOptions };
+  const individualOptions = { ...options, ...detailOptions };
 
   const [open, setOpen] = useState(false);
   const [expendOptions, setExpendOptions] = useState<ExpendedRequestItems>({
@@ -82,7 +80,7 @@ export default function AuctionDialog(props: Props) {
     SortCondition: "ASC",
   });
   const { data, isLoading, isValidating, error } = useSWR<TAuction>(
-    { ...individualOptions, ...expendOptions, ...commonOption },
+    open ? { ...individualOptions, ...expendOptions, ...commonOption } : null,
     fetcher,
     { revalidateIfStale: false, revalidateOnFocus: false },
   );
@@ -92,6 +90,19 @@ export default function AuctionDialog(props: Props) {
       setExpendOptions((prevState) => ({ ...prevState, PageNo: n })),
     [],
   );
+  const setSortOptions = useCallback((type: AUCTION_SORT_TYPES | null) => {
+    if (!type) return;
+    setExpendOptions((prevState) => {
+      const newState = { ...prevState, PageNo: 1 };
+      if (prevState.Sort === type) {
+        newState.SortCondition =
+          prevState.SortCondition === "ASC" ? "DESC" : "ASC";
+      } else {
+        newState.Sort = type;
+      }
+      return newState;
+    });
+  }, []);
 
   return (
     <>
@@ -103,7 +114,7 @@ export default function AuctionDialog(props: Props) {
         onClose={onClose}
         fullWidth={matches}
         fullScreen={!matches}
-        maxWidth={"sm"}
+        maxWidth={"md"}
         aria-labelledby={"경매장 검색 결과 모달"}
       >
         <IconButton
@@ -120,18 +131,16 @@ export default function AuctionDialog(props: Props) {
         <DialogTitle sx={{ py: 1 }}>경매장</DialogTitle>
         <TableContainer>
           <Table size={"small"}>
-            <TableHead>
-              <TableRow>
-                <TableCell colSpan={2} align={"center"}>
-                  아이템 정보
-                </TableCell>
-                <TableCell align={"center"}>품질</TableCell>
-                <TableCell align={"center"}>입찰가</TableCell>
-                <TableCell align={"center"}>즉구가</TableCell>
-                <TableCell align={"center"}>마감</TableCell>
-              </TableRow>
-            </TableHead>
-            <AuctionTable data={data} isLoading={isLoading || isValidating} />
+            <AuctionTableHead
+              options={expendOptions}
+              setSort={setSortOptions}
+            />
+            <AuctionTable
+              type={type}
+              data={data}
+              onClose={onClose}
+              isLoading={isLoading || isValidating}
+            />
           </Table>
         </TableContainer>
         <DialogActions>

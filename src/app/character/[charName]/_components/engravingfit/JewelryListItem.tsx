@@ -45,13 +45,23 @@ export default function JewelryListItem(props: Props) {
   const jewelry = useAppSelector((state) => state.wearings.value[type]);
 
   const optionList = useMemo(() => {
-    const { ItemTier, ItemGrade, ItemGradeQuality } = jewelry.searchOption;
+    const { ItemTier, ItemGrade, ItemGradeQuality, EtcOptions } =
+      jewelry.searchOption;
     return [
       `${ItemTier}티어`,
       ItemGrade && `${ItemGrade}`,
       ItemGradeQuality && `품질 ${ItemGradeQuality}이상`,
     ];
   }, [dispatch, jewelry]);
+
+  const etcOptionList = useMemo(
+    () =>
+      jewelry.searchOption.EtcOptions.map(
+        (opt) =>
+          `${opt.EtcSub.Text} ${opt.MinValue ?? ""}~${opt.MaxValue ?? ""}`,
+      ),
+    [jewelry.searchOption.EtcOptions],
+  );
 
   return (
     <>
@@ -138,7 +148,10 @@ export default function JewelryListItem(props: Props) {
           subheader={<DetailsListSubheader>아이템 찾기</DetailsListSubheader>}
         >
           <SearchOptionsItem type={type}>
-            <ListItemText primary={_.compact(optionList).join(", ")} />
+            <ListItemText
+              primary={etcOptionList.join(", ")}
+              secondary={_.compact(optionList).join(", ")}
+            />
             <ListItemIcon>
               <ArrowForward />
             </ListItemIcon>

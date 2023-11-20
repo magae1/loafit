@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   TableRow,
   TableCell,
@@ -7,8 +7,11 @@ import {
   Typography,
   List,
   Grid,
+  Button,
 } from "@mui/material";
 import { KeyboardArrowUp, KeyboardArrowDown } from "@mui/icons-material";
+import { useDispatch } from "react-redux";
+import { useSnackbar, VariantType } from "notistack";
 import _ from "underscore";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -22,15 +25,51 @@ import AuctionItemAuctionInfoItems from "@/components/AuctionItemAuctionInfoItem
 import ItemNameTypo from "@/components/ItemNameTypo";
 import AuctionItemInfoItem from "@/components/AuctionItemInfoItem";
 import { DetailsListSubheader } from "@/components/styles";
+import { addOne, wearingType } from "@/redux/features/wearingsSlice";
+import { useAppSelector } from "@/redux/store";
 
 interface Props {
+  type: keyof wearingType;
   item: TAuctionItem;
+  onClose: () => void;
 }
 
 export default function AuctionTableRow(props: Props) {
-  const { item } = props;
-
+  const { type, item, onClose } = props;
+  const wearings = useAppSelector((state) => state.wearings.value);
+  const dispatch = useDispatch();
+  const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
+
+  const toast = (name: string, variant: VariantType = "error") => {
+    enqueueSnackbar(`동일한 이름의 ${name}를 장착중입니다.`, { variant });
+  };
+
+  const onEquip = useCallback(() => {
+    if (type === "earring1") {
+      if (wearings.earring2.item?.Name === item.Name) {
+        toast(wearings.earring2.codeName);
+        return;
+      }
+    } else if (type === "earring2") {
+      if (wearings.earring1.item?.Name === item.Name) {
+        toast(wearings.earring1.codeName);
+        return;
+      }
+    } else if (type === "ring1") {
+      if (wearings.ring2.item?.Name === item.Name) {
+        toast(wearings.ring2.codeName);
+        return;
+      }
+    } else if (type === "ring2") {
+      if (wearings.ring1.item?.Name === item.Name) {
+        toast(wearings.ring1.codeName);
+        return;
+      }
+    }
+    dispatch(addOne({ type: type, item: item }));
+    onClose();
+  }, [item, dispatch]);
 
   return (
     <>
@@ -49,7 +88,7 @@ export default function AuctionTableRow(props: Props) {
           <ItemNameTypo item={item} fontSize={"inherit"} />
         </TableCell>
         <TableCell align={"center"}>
-          {item.GradeQuality ? (
+          {item.GradeQuality >= 0 ? (
             <Typography
               sx={{
                 bgcolor: qualityColor(item.GradeQuality),
@@ -64,7 +103,7 @@ export default function AuctionTableRow(props: Props) {
           )}
         </TableCell>
         <TableCell align={"center"}>
-          {item.AuctionInfo?.StartPrice ?? "-"}
+          {item.AuctionInfo?.BidStartPrice ?? "-"}
         </TableCell>
         <TableCell align={"center"}>
           {item.AuctionInfo?.BuyPrice ?? "-"}
@@ -101,6 +140,9 @@ export default function AuctionTableRow(props: Props) {
                 <AuctionItemAuctionInfoItems info={item.AuctionInfo} />
               )}
             </List>
+            <Button fullWidth sx={{ mb: 1 }} onClick={onEquip}>
+              장착
+            </Button>
           </Collapse>
         </TableCell>
       </TableRow>

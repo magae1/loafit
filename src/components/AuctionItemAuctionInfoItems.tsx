@@ -37,7 +37,7 @@ export default function AuctionItemAuctionInfoItems(props: Props) {
       <ListItem>
         <ListItemText primary={"즉시 구매가"} />
         <ListItemIcon>
-          <GoldPriceLabel price={BuyPrice} />
+          {BuyPrice ? <GoldPriceLabel price={BuyPrice} /> : "-"}
         </ListItemIcon>
       </ListItem>
       <ListItem>

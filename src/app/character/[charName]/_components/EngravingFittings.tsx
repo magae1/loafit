@@ -4,11 +4,12 @@ import StatsBoard from "./engravingfit/StatsBoard";
 import EngravingBoard from "./engravingfit/EngravingsBoard";
 import JewelryListItem from "./engravingfit/JewelryListItem";
 import StoneBoard from "./engravingfit/StoneBoard";
+import GoldBoard from "./engravingfit/GoldBoard";
 import EngravingEquipment from "./engravingfit/EngravingEquipment";
 import { JEWELRY_TYPES } from "@/libs/types";
 import { wearingType } from "@/redux/features/wearingsSlice";
 
-type TWearing = {
+export type TWearing = {
   type: keyof wearingType;
   name: JEWELRY_TYPES;
 };
@@ -29,6 +30,7 @@ export default function EngravingFittings() {
         <Grid item xs={12} md={5}>
           <StatsBoard />
           <EngravingBoard />
+          <GoldBoard />
         </Grid>
         <Grid item xs={12} md>
           <List disablePadding>
