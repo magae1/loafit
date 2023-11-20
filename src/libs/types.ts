@@ -319,7 +319,7 @@ type TIndividualRequestItems = {
   ItemTier: number;
   ItemGrade: string | null;
   ItemName: string | null;
-  CategoryCode: number;
+  CategoryCode: number | null;
 };
 
 export type TDetailRequestItems = {

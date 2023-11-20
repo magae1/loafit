@@ -5,7 +5,6 @@ import {
   Container,
   Typography,
   Toolbar,
-  Stack,
 } from "@mui/material";
 
 export default function Header() {

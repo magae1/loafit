@@ -1,5 +1,5 @@
 "use client";
-import { ReactNode, useCallback, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Autocomplete, Button, Grid } from "@mui/material";
 
 import { TDetailEtcOption, TEtcOption, TEtcSub } from "@/libs/types";

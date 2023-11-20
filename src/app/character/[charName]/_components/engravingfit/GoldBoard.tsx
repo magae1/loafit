@@ -1,12 +1,5 @@
 "use client";
-import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
 import { yellow } from "@mui/material/colors";
 import _ from "underscore";
 

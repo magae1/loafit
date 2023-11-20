@@ -8,15 +8,12 @@ import {
   DialogContent,
   DialogTitle,
   Grid,
-  TextField,
 } from "@mui/material";
 
 import { TEtcOption, TEtcSub, TSearchDetailOption } from "@/libs/types";
 import { auctionOptions } from "@/libs/data";
 import NumberInput from "@/components/NumberInput";
 import {
-  GroupHeader,
-  GroupItems,
   NumInputAdornment,
   StyledInput,
   StyledInputRoot,
